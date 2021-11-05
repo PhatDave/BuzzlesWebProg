@@ -6,7 +6,7 @@ Stranica će se sastojati od *nekoliko* stranica koja će svaka za sebe reprezen
 
 Na kraju svake "stranice" (igre) nalazit će se poveznice na ostale raspoložive igre u obliku slika ili slično
 
-Inspiracija uzeta od [www.puzzle.com](www.puzzle-skyscrapers.com)
+Inspiracija uzeta sa www.puzzle-skyscrapers.com
 
 <span style="font-size: 11px">Note: Link vodi na jednu od raspoloživih igara</span>
 
