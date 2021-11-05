@@ -1,4 +1,4 @@
-<span style="float: left; width: 50%; text-align: left; height: 90px"><h2>Logic Puzzle Web stranica</h2></span><span style="float: right; text-align: right; width: 50%; height:90px"><h3>David Majdandžić</h3></span>
+<h2 style="float: left; width: 50%; text-align: left; height: 90px">Logic Puzzle Web stranica</h2><h3 style="float: right; text-align: right; width: 50%; height:90px">David Majdandžić</h3>
 ---
 
 ## **Stranica**
