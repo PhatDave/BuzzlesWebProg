@@ -1,12 +1,3 @@
-div.puzzleInfo {
-    height: 100%;
-    border: 1px solid #373737;
-}
-
-.sidebarText {
-    padding: 10px;
-}
-
 .rules {
     padding: 10px;
     font-size: 0.85em;
@@ -44,15 +35,14 @@ div.puzzleInfo {
 
 /* Random Garbage */
 
-.fa-chevron-left {
-    font-size: 4vh;
+.fa {
+    font-size: 1.5vw;
 }
 
-.fa-user {
-    font-size: 4vh;
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+    .fa {
+        font-size: 8vw;
+    }
 }
-
-/*div.mediaBar {*/
-/*    !*height: 8vh;*!*/
-/*    background-color: #373737;*/
-/*}*/
