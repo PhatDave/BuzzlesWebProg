@@ -12,10 +12,16 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from main.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('skyscrapers/', skyscrapers, name="skyscrapers"),
+    path('', index, name='index'),
 ]

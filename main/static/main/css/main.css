@@ -1,0 +1,58 @@
+div.puzzleInfo {
+    height: 100%;
+    border: 1px solid #373737;
+}
+
+.sidebarText {
+    padding: 10px;
+}
+
+.rules {
+    padding: 10px;
+    font-size: 0.85em;
+}
+
+.rulesList {
+    padding: 0px 25px;
+    font-size: 0.85em;
+}
+
+#puzzleTitle {
+    padding: 20px 10px;
+    font-size: 1.5em;
+}
+
+.bottomInfo {
+    font-size: 0.93em;
+    padding: 0px 30px;
+    position: relative;
+    width: 50%;
+}
+
+.ruleHide {
+    float: right;
+}
+
+#bottomInfoContainer {
+    height: 4%;
+}
+
+#diffList {
+    padding: 10px 50px;
+    font-size: 0.85em;
+}
+
+/* Random Garbage */
+
+.fa-chevron-left {
+    font-size: 4vh;
+}
+
+.fa-user {
+    font-size: 4vh;
+}
+
+/*div.mediaBar {*/
+/*    !*height: 8vh;*!*/
+/*    background-color: #373737;*/
+/*}*/
