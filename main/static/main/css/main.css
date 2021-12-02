@@ -1,40 +1,3 @@
-.rules {
-    padding: 10px;
-    font-size: 0.85em;
-}
-
-.rulesList {
-    padding: 0px 25px;
-    font-size: 0.85em;
-}
-
-#puzzleTitle {
-    padding: 20px 10px;
-    font-size: 1.5em;
-}
-
-.bottomInfo {
-    font-size: 0.93em;
-    padding: 0px 30px;
-    position: relative;
-    width: 50%;
-}
-
-.ruleHide {
-    float: right;
-}
-
-#bottomInfoContainer {
-    height: 4%;
-}
-
-#diffList {
-    padding: 10px 50px;
-    font-size: 0.85em;
-}
-
-/* Random Garbage */
-
 .fa {
     font-size: 1.5vw;
 }
@@ -45,4 +8,8 @@ and (max-device-width : 480px) {
     .fa {
         font-size: 8vw;
     }
+}
+
+.smallerText {
+    font-size: 0.85em;
 }
