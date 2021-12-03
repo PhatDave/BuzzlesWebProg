@@ -14,6 +14,7 @@ def index(request):
 
 
 def gameDispatcher(request, lang='en', puzzleName='skyscrapers'):
+	request.session['lang'] = lang
 	context = {}
 	try:
 		context = cb.BuildDefault(context)
