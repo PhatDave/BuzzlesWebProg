@@ -17,13 +17,13 @@
 	<body>
 		<div class="container-fluid">
 			<div class="row">
-                <i class="fa fa-chevron-right p-3 d-none showIcon" onclick="ShowSidebar()"></i>
+                <i class="fa fa-chevron-right p-3 d-none" id="showIcon"></i>
 				<div class="sidebar col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
 					<div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
 {#                        TODO: Display some sort of user account instead of login page #}
                         <a href="{% url 'main:login' %}"><i class="fa fa-user text-center p-3"></i></a>
 						{# TODO: Add JS for hide shit on chevron #}
-						<i class="fa fa-chevron-left p-3" onclick="HideSidebar()"></i>
+						<i class="fa fa-chevron-left p-3" id="hideIcon"></i>
 					</div>
 					<div class="row container-fluid">
 						<div class="row">
@@ -44,21 +44,21 @@
 							{% endfor %}
 						</div>
 					</div>
-					<div class="row p-3">
+					<div class="rules row p-3">
 						<div class="col-12">
 							<p>
 								{{ puzzleDesc }}
 							</p>
 						</div>
 					</div>
-					<div class="row px-2">
+					<div class="rules row px-2">
 						<div class="col-12">
 							<p class="p-2 smallerText">
 								{{ puzzleRules1 }}
 							</p>
 						</div>
 					</div>
-					<div class="row">
+					<div class="rules row">
 						<div class="col-12">
 							<ul class="smallerText">
 								{% for rule in puzzleRulesTable %}
@@ -71,7 +71,7 @@
 						<div class="col-6">
 							<i class="fab fa-youtube"></i> Video tutorial
 						</div>
-						<div class="col-6">
+						<div class="col-6" id="hideRules">
 							{# TODO: Add JS #}
 							Hide Rules
 						</div>
@@ -134,15 +134,37 @@
 		</div>
 
         <script>
-            function HideSidebar() {
-                $(".sidebar").addClass("d-none");
-                $(".showIcon").removeClass("d-none");
-            }
+            $(document).ready(function() {
+                var rulesShown = true;
 
-            function ShowSidebar() {
-                $(".sidebar").removeClass("d-none");
-                $(".showIcon").addClass("d-none");
-            }
+                $("#hideIcon").click(function() {
+                    $(".sidebar").addClass("d-none");
+                    $("#showIcon").removeClass("d-none");
+                })
+
+                $("#showIcon").click(function() {
+                    $(".sidebar").removeClass("d-none");
+                    $("#showIcon").addClass("d-none");
+                })
+
+                $("#hideRules").click(function() {
+                    if (rulesShown) {
+                        $(".rules").each(function() {
+                            console.log($(this));
+                            $(this).addClass("d-none");
+                        })
+                        $("#hideRules").text("Show rules")
+                        rulesShown = false;
+                    } else {
+                        $(".rules").each(function() {
+                            console.log($(this));
+                            $(this).removeClass("d-none");
+                        })
+                        $("#hideRules").text("Hide rules")
+                        rulesShown = true;
+                    }
+                })
+            })
         </script>
 	</body>
 </html>
