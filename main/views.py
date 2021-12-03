@@ -1,6 +1,6 @@
 import os
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
 import main.ContextBuilder as cb
 
@@ -13,11 +13,14 @@ def index(request):
 	return render(request, 'main/index.html', context)
 
 
-def gameDispatcher(request, puzzleName):
+def gameDispatcher(request, lang='en', puzzleName='skyscrapers'):
 	context = {}
-	context = cb.BuildDefault(context)
-	context = cb.Build(puzzleName, context)
-	return render(request, 'main/game.html', context)
+	try:
+		context = cb.BuildDefault(context)
+		context = cb.Build(puzzleName, lang=lang, context=context)
+		return render(request, f'main/games/{puzzleName}.html', context)
+	except Exception:
+		return HttpResponseNotFound()
 
 
 def login(request):

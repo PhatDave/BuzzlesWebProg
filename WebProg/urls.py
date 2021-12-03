@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', login, name="login"),
     path('register/', register, name="register"),
+    path('<str:lang>.<str:puzzleName>/', gameDispatcher, name="gameDispatcher"),
     path('<str:puzzleName>/', gameDispatcher, name="gameDispatcher"),
     path('', index, name='index'),
 ]
