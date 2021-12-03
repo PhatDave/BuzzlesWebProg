@@ -1,0 +1,194 @@
+
+
+{% load static %}
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>{{ puzzleTitle }}</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<script src="https://kit.fontawesome.com/3c7df30b74.js" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+		{% block extrahead %}
+		{% endblock %}
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="sidebar col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
+					<div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
+						{# TODO: Display some sort of user account instead of login page #}
+						<a href="{% url 'main:login' %}"><i class="fa fa-user text-center p-3"></i></a>
+						<i class="fa fa-chevron-left p-3" id="hideIcon"></i>
+					</div>
+					<div class="row container-fluid">
+						<div class="row">
+							<div class="col-md-12 p-3">
+								<h3>{{ puzzleTitle }}</h3>
+							</div>
+						</div>
+					</div>
+					<div class="row container-fluid">
+						<div class="row text-center d-flex justify-content-between align-items-center">
+							{# Prof says: Look at https://docs.djangoproject.com/en/3.2/topics/templates/#django.template.backends.jinja2.Jinja2 #}
+							{% for lang in langFlags %}
+							{% with "main/imgs/lang/"|add:lang.img|add:"" as langI %}
+							<div class="col-3">
+								<img src="{% static langI %}" class="img-fluid border border-dark border-2">
+							</div>
+							{% endwith %}
+							{% endfor %}
+						</div>
+					</div>
+					<div class="rules row p-3">
+						<div class="col-12">
+							<p>
+								{{ puzzleDesc }}
+							</p>
+						</div>
+					</div>
+					<div class="rules row px-2">
+						<div class="col-12">
+							<p class="p-2 smallerText">
+								{{ puzzleRules1 }}
+							</p>
+						</div>
+					</div>
+					<div class="rules row">
+						<div class="col-12">
+							<ul class="smallerText">
+								{% for rule in puzzleRulesTable %}
+								<li> {{ rule }} </li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+					<div class="row text-center py-3">
+						<div class="col-12" id="hideRules">
+							{# TODO: Add JS #}
+							Hide Rules
+						</div>
+					</div>
+					<div class="row">
+						{# TODO: add links to difficulties #}
+						<div class="col-12">
+							<ul id="diffList">
+								{% for diff in difficultyTable %}
+								<li>{{ diff }}</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-4 col-sm-12 col-lg-2 d-none" id="placeholderSidebar">
+					<i class="fa fa-chevron-right p-3" id="showIcon"></i>
+				</div>
+				<div class="col-md-8 col-sm-12 col-lg-8 text-center logoImage p-5">
+					<div class="col-12">
+						{% block logo %}
+						{% endblock %}
+						<div class="py-4">
+							<button class="btn btn-outline-dark rounded-0"><i class="fas fa-search"></i></button>
+							<button class="btn btn-outline-dark rounded-0"><i class="fas fa-cog"></i></button>
+							{# TODO: Add timer of some form #}
+							<span class="px-3">12:34</span>
+							<button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-left"></i></button>
+							<button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-right"></i></button>
+							{# TODO: JS the two buttons #}
+							{# https://getbootstrap.com/docs/5.0/utilities/display/ #}
+							<div class="d-none">Zoom bar</div>
+							<div class="d-none">Settings</div>
+						</div>
+						{% block game %}
+						{% endblock %}
+						<div class="py-4">
+							{# TODO: Maybe make responsive with JS one day #}
+							<button class="w-25 btn btn-outline-dark rounded-0">Done</button>
+						</div>
+						<div>
+							{# TODO: Make responsive by splitting buttons into 2 rows on sm #}
+							<button class="btn btn-outline-dark rounded-0">Start Over</button>
+							<button class="btn btn-outline-dark rounded-0">Print</button>
+							<button class="btn btn-outline-dark rounded-0">Share</button>
+							<button class="btn btn-outline-dark rounded-0">New Puzzle</button>
+						</div>
+					</div>
+					<div class="col-12">
+						{% for game in puzzleGameIcons %}
+						<a href={% url 'main:gameDispatcher' game.lowerName %}>
+						<figure class="figure m-2">
+							{% with "main/imgs/games/"|add:game.img|add:"" as gameI %}
+							<img src="{% static gameI %}" class="mx-auto figure-img img-fluid">
+							{% endwith %}
+							<figcaption class="figure-caption">{{ game.name }}</figcaption>
+						</figure>
+						</a>
+						{% endfor %}
+					</div>
+				</div>
+				<div class="col-md-2 col-lg-2"></div>
+			</div>
+		</div>
+		<script>
+			$(document).ready(function() {
+			    let rulesShown = true;
+
+			    function GetBoard() {
+			        let board = [];
+			        for (let i = 0; i < boardSize; i++) {
+			            let temp = [];
+			            for (let j = 0; j < boardSize; j++) {
+			                temp.push(parseInt($("#cell" + i + j).val()));
+			            }
+			            board.push(temp);
+			        }
+			        return board
+			    }
+
+			    {# TODO: Finish this function and move the skyscraper related functions to skyscrapers #}
+			    function ValidateBoard() {
+			        let board = GetBoard();
+			        console.log(board);
+			    }
+
+			    {# Hide sidebar #}
+			    $("#hideIcon").click(function() {
+			        $(".sidebar").addClass("d-none");
+			        $("#placeholderSidebar").removeClass("d-none");
+			    })
+
+			    {# Show sidebar #}
+			    $("#showIcon").click(function() {
+			        $(".sidebar").removeClass("d-none");
+			        $("#placeholderSidebar").addClass("d-none");
+			    })
+
+			    {# Toggle rules #}
+			    $("#hideRules").click(function() {
+			        if (rulesShown) {
+			            $(".rules").each(function() {
+			                console.log($(this));
+			                $(this).addClass("d-none");
+			            })
+			            $("#hideRules").text("Show rules")
+			            rulesShown = false;
+			        } else {
+			            $(".rules").each(function() {
+			                console.log($(this));
+			                $(this).removeClass("d-none");
+			            })
+			            $("#hideRules").text("Hide rules")
+			            rulesShown = true;
+			        }
+			    })
+
+			    {% block JQuery %}
+			    {% endblock %}
+			})
+		</script>
+	</body>
+</html>
+

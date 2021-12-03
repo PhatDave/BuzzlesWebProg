@@ -1,3 +1,15 @@
 from django.db import models
 
 # Create your models here.
+from django.contrib import admin
+from django.db.models import Model
+
+
+class SkyscrapersPuzzle(models.Model):
+	task = models.CharField(max_length=128, blank=False)
+	solution = models.CharField(max_length=256, blank=False)
+
+
+class User(models.Model):
+	username = models.CharField(max_length=32)
+	email = models.CharField(max_length=128)
