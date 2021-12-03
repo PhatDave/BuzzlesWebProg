@@ -2,60 +2,7 @@
 
 {% load static %}
 
-{% block puzzleTitle %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 p-3">
-                <h3>Skyscrapers</h3>
-            </div>
-        </div>
-{% endblock %}
 {% block puzzleDesc %}
-        <div class="row p-3">
-            <div class="col-12">
-                <p>
-                    Skyscrapers also known as "Towers" is a logic puzzle with simple rules and challenging solutions.
-                </p>
-            </div>
-        </div>
-        <div class="row px-2">
-            <div class="col-12">
-                <p class="p-2 smallerText">
-                    The rules are simple.
-                    The objective is to place skyscrapers in all cells on the grid according to the rules:
-                </p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <ul class="smallerText">
-                    <li> The height of the skyscrapers is from 1 to the size of the grid i.e. 1 to 4 for a 4x4 puzzle. </li>
-                    <li> You cannot have two skyscrapers with the same height on the same row or column. </li>
-                    <li> The numbers on the sides of the grid indicate how many skyscrapers would you see if you look in the direction of the arrow. </li>
-                    <li> Place numbers in each cell to indicate the height of the skyscrapers. </li>
-                </ul>
-            </div>
-        </div>
-        <div class="row text-center py-3">
-            <div class="col-6">
-                <i class="fab fa-youtube"></i> Video tutorial
-            </div>
-            <div class="col-6">
-{#                TODO: Add JS #}
-                Hide Rules
-            </div>
-        </div>
-    {#    TODO: add links to difficulties#}
-        <div class="row">
-            <div class="col-12">
-                <ul id="diffList">
-                    {% for diff in diffs %}
-                        <li>{{ diff }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
 {% endblock %}
 {% block logo %}
 <img src="{% static 'main/imgs/skyscrapers-logo.png' %}">

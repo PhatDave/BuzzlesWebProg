@@ -1,110 +1,155 @@
 {% load static %}
-
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Buzzles</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <script src="https://kit.fontawesome.com/3c7df30b74.js" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
-        {% block extrahead %}
-        {% endblock %}
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
-                    <div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
-        {#                TODO: Add login page on user icon #}
-                        <i class="fa fa-user text-center p-3"></i>
-        {#                TODO: Add JS for hide shit on chevron #}
-                        <i class="fa fa-chevron-left p-3"></i>
-                    </div>
-                    {% block puzzleTitle %}
-                    {% endblock %}
-        {#        TODO: Unretardify images #}
-                    <div class="row text-center d-flex justify-content-between align-items-center">
-                        <div class="col-3">
-                            <img src="{% static 'main/imgs/lang/en.png' %}" class="img-fluid border border-dark border-2">
-                        </div>
-                        <div class="col-3">
-                            <img src="{% static 'main/imgs/lang/ru.png' %}" class="img-fluid border border-dark border-2">
-                        </div>
-                        <div class="col-3">
-                            <img src="{% static 'main/imgs/lang/de.png' %}" class="img-fluid border border-dark border-2">
-                        </div>
-                        <div class="col-3">
-                            <img src="{% static 'main/imgs/lang/fr.png' %}" class="img-fluid border border-dark border-2">
-                        </div>
-                    </div>
-                    {% block puzzleDesc %}
-                    {% endblock %}
-                </div>
-                <div class="col-md-8 col-sm-12 col-lg-8 text-center logoImage">
-                    <div class="col-12 py-5">
-                        {% block logo %}
-                        {% endblock %}
-                        <div class="py-4">
-                            <button class="btn btn-outline-dark rounded-0"><i class="fas fa-search"></i></button>
-                            <button class="btn btn-outline-dark rounded-0"><i class="fas fa-cog"></i></button>
-                        {#                        TODO: Add timer of some form #}
-                            <span class="px-3">12:34</span>
-                            <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-left"></i></button>
-                            <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-right"></i></button>
-                        {#    TODO: JS the two bitches #}
-                        {#    https://getbootstrap.com/docs/5.0/utilities/display/ #}
-                        <div class="d-none">Zoom bar</div>
-                        <div class="d-none">Settings</div>
-                        </div>
-                        {% block game %}
-                        {% endblock %}
-                        <div class="py-4">
-    {#                        TODO: Maybe make responsive with JS one day #}
-                            <button class="w-25 btn btn-outline-dark rounded-0">Done</button>
-                        </div>
-                        <div>
-                            <button class="btn btn-outline-dark rounded-0">Start Over</button>
-                            <button class="btn btn-outline-dark rounded-0">Print</button>
-                            <button class="btn btn-outline-dark rounded-0">Share</button>
-                            <button class="btn btn-outline-dark rounded-0">New Puzzle</button>
-                        </div>
-                    </div>
-    {#                TODO: Add more puzzl dynamically #}
-    {#                TODO: Oh you can use the context of the website being loaded inside of base, neat #}
-                    <div class="col-12">
-                        <figure class="figure m-2">
-                            <img src="{% static 'main/imgs/games/Futoshiki.png' %}" class="mx-auto figure-img img-fluid">
-                            <figcaption class="figure-caption">Futoshiki</figcaption>
-                        </figure>
-                        <figure class="figure m-2">
-                            <img src="{% static 'main/imgs/games/LightUp.png' %}" class="mx-auto figure-img img-fluid">
-                            <figcaption class="figure-caption">Light Up</figcaption>
-                        </figure>
-                        <figure class="figure m-2">
-                            <img src="{% static 'main/imgs/games/Nonograms.png' %}" class="mx-auto figure-img img-fluid">
-                            <figcaption class="figure-caption">Nonograms</figcaption>
-                        </figure>
-                        <figure class="figure m-2">
-                            <img src="{% static 'main/imgs/games/Skyscrapers.png' %}" class="mx-auto figure-img img-fluid">
-                            <figcaption class="figure-caption">Skyscrapers</figcaption>
-                        </figure>
-                        <figure class="figure m-2">
-                            <img src="{% static 'main/imgs/games/Sudoku.png' %}" class="mx-auto figure-img img-fluid">
-                            <figcaption class="figure-caption">Sudoku</figcaption>
-                        </figure>
-                        <figure class="figure m-2">
-                            <img src="{% static 'main/imgs/games/Shakashaka.png' %}" class="mx-auto figure-img img-fluid">
-                            <figcaption class="figure-caption">Shakashaka</figcaption>
-                        </figure>
-                    </div>
-                </div>
-                <div class="col-md-2 col-lg-2">
-
-                        </div>
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Buzzles</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <script src="https://kit.fontawesome.com/3c7df30b74.js" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+      {% block extrahead %}
+      {% endblock %}
+   </head>
+   <body>
+      <div class="container-fluid">
+         <div class="row">
+            <div class="col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
+               <div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
+                  {# TODO: Add login page on user icon #}
+                  <i class="fa fa-user text-center p-3"></i>
+                  {# TODO: Add JS for hide shit on chevron #}
+                  <i class="fa fa-chevron-left p-3"></i>
+               </div>
+               <div class="row container-fluid">
+                  <div class="row">
+                     <div class="col-md-12 p-3">
+                        <h3>{{ puzzleTitle }}</h3>
+                     </div>
+                  </div>
+               </div>
+               <div class="row container-fluid">
+                  {# TODO: Unretardify images #}
+                  <div class="row text-center d-flex justify-content-between align-items-center">
+                     <div class="col-3">
+                        <img src="{% static 'main/imgs/lang/en.png' %}" class="img-fluid border border-dark border-2">
+                     </div>
+                     <div class="col-3">
+                        <img src="{% static 'main/imgs/lang/ru.png' %}" class="img-fluid border border-dark border-2">
+                     </div>
+                     <div class="col-3">
+                        <img src="{% static 'main/imgs/lang/de.png' %}" class="img-fluid border border-dark border-2">
+                     </div>
+                     <div class="col-3">
+                        <img src="{% static 'main/imgs/lang/fr.png' %}" class="img-fluid border border-dark border-2">
+                     </div>
+                  </div>
+               </div>
+               <div class="row p-3">
+                  <div class="col-12">
+                     <p>
+                        {{ puzzleDesc }}
+                     </p>
+                  </div>
+               </div>
+               <div class="row px-2">
+                  <div class="col-12">
+                     <p class="p-2 smallerText">
+                        {{ puzzleRules1 }}
+                     </p>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-12">
+                     <ul class="smallerText">
+                        {% for rule in puzzleRulesTable %}
+                        <li> {{ rule }} </li>
+                        {% endfor %}
+                     </ul>
+                  </div>
+               </div>
+               <div class="row text-center py-3">
+                  <div class="col-6">
+                     <i class="fab fa-youtube"></i> Video tutorial
+                  </div>
+                  <div class="col-6">
+                     {#                TODO: Add JS #}
+                     Hide Rules
+                  </div>
+               </div>
+               {#    TODO: add links to difficulties#}
+               <div class="row">
+                  <div class="col-12">
+                     <ul id="diffList">
+                        {% for diff in difficultyTable %}
+                        <li>{{ diff }}</li>
+                        {% endfor %}
+                     </ul>
+                  </div>
+               </div>
             </div>
-        </div>
-    </body>
+            <div class="col-md-8 col-sm-12 col-lg-8 text-center logoImage">
+               <div class="col-12 py-5">
+                  {% block logo %}
+                  {% endblock %}
+                  <div class="py-4">
+                     <button class="btn btn-outline-dark rounded-0"><i class="fas fa-search"></i></button>
+                     <button class="btn btn-outline-dark rounded-0"><i class="fas fa-cog"></i></button>
+                     {# TODO: Add timer of some form #}
+                     <span class="px-3">12:34</span>
+                     <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-left"></i></button>
+                     <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-right"></i></button>
+                     {# TODO: JS the two bitches #}
+                     {#    https://getbootstrap.com/docs/5.0/utilities/display/ #}
+                     <div class="d-none">Zoom bar</div>
+                     <div class="d-none">Settings</div>
+                  </div>
+                  {% block game %}
+                  {% endblock %}
+                  <div class="py-4">
+                     {# TODO: Maybe make responsive with JS one day #}
+                     <button class="w-25 btn btn-outline-dark rounded-0">Done</button>
+                  </div>
+                  <div>
+                     <button class="btn btn-outline-dark rounded-0">Start Over</button>
+                     <button class="btn btn-outline-dark rounded-0">Print</button>
+                     <button class="btn btn-outline-dark rounded-0">Share</button>
+                     <button class="btn btn-outline-dark rounded-0">New Puzzle</button>
+                  </div>
+               </div>
+               {# TODO: Add more puzzl dynamically #}
+               {# TODO: Oh you can use the context of the website being loaded inside of base, neat #}
+               <div class="col-12">
+                  <figure class="figure m-2">
+                     <img src="{% static 'main/imgs/games/Futoshiki.png' %}" class="mx-auto figure-img img-fluid">
+                     <figcaption class="figure-caption">Futoshiki</figcaption>
+                  </figure>
+                  <figure class="figure m-2">
+                     <img src="{% static 'main/imgs/games/LightUp.png' %}" class="mx-auto figure-img img-fluid">
+                     <figcaption class="figure-caption">Light Up</figcaption>
+                  </figure>
+                  <figure class="figure m-2">
+                     <img src="{% static 'main/imgs/games/Nonograms.png' %}" class="mx-auto figure-img img-fluid">
+                     <figcaption class="figure-caption">Nonograms</figcaption>
+                  </figure>
+                  <figure class="figure m-2">
+                     <img src="{% static 'main/imgs/games/Skyscrapers.png' %}" class="mx-auto figure-img img-fluid">
+                     <figcaption class="figure-caption">Skyscrapers</figcaption>
+                  </figure>
+                  <figure class="figure m-2">
+                     <img src="{% static 'main/imgs/games/Sudoku.png' %}" class="mx-auto figure-img img-fluid">
+                     <figcaption class="figure-caption">Sudoku</figcaption>
+                  </figure>
+                  <figure class="figure m-2">
+                     <img src="{% static 'main/imgs/games/Shakashaka.png' %}" class="mx-auto figure-img img-fluid">
+                     <figcaption class="figure-caption">Shakashaka</figcaption>
+                  </figure>
+               </div>
+            </div>
+            <div class="col-md-2 col-lg-2">
+            </div>
+         </div>
+      </div>
+   </body>
 </html>
