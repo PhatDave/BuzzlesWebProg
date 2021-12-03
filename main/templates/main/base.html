@@ -9,6 +9,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 		<script src="https://kit.fontawesome.com/3c7df30b74.js" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 		<link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 		{% block extrahead %}
 		{% endblock %}
@@ -16,12 +17,13 @@
 	<body>
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
+                <i class="fa fa-chevron-right p-3 d-none showIcon" onclick="ShowSidebar()"></i>
+				<div class="sidebar col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
 					<div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
 {#                        TODO: Display some sort of user account instead of login page #}
                         <a href="{% url 'main:login' %}"><i class="fa fa-user text-center p-3"></i></a>
 						{# TODO: Add JS for hide shit on chevron #}
-						<i class="fa fa-chevron-left p-3"></i>
+						<i class="fa fa-chevron-left p-3" onclick="HideSidebar()"></i>
 					</div>
 					<div class="row container-fluid">
 						<div class="row">
@@ -130,6 +132,18 @@
 				<div class="col-md-2 col-lg-2"></div>
 			</div>
 		</div>
+
+        <script>
+            function HideSidebar() {
+                $(".sidebar").addClass("d-none");
+                $(".showIcon").removeClass("d-none");
+            }
+
+            function ShowSidebar() {
+                $(".sidebar").removeClass("d-none");
+                $(".showIcon").addClass("d-none");
+            }
+        </script>
 	</body>
 </html>
 
