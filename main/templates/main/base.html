@@ -17,7 +17,6 @@
 	<body>
 		<div class="container-fluid">
 			<div class="row">
-                <i class="fa fa-chevron-right p-3 d-none" id="showIcon"></i>
 				<div class="sidebar col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
 					<div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
 {#                        TODO: Display some sort of user account instead of login page #}
@@ -68,10 +67,7 @@
 						</div>
 					</div>
 					<div class="row text-center py-3">
-						<div class="col-6">
-							<i class="fab fa-youtube"></i> Video tutorial
-						</div>
-						<div class="col-6" id="hideRules">
+						<div class="col-12" id="hideRules">
 							{# TODO: Add JS #}
 							Hide Rules
 						</div>
@@ -87,6 +83,9 @@
 						</div>
 					</div>
 				</div>
+                <div class="col-md-4 col-sm-12 col-lg-2 d-none" id="placeholderSidebar">
+                    <i class="fa fa-chevron-right p-3"></i>
+                </div>
 				<div class="col-md-8 col-sm-12 col-lg-8 text-center logoImage">
 					<div class="col-12 py-5">
 						{% block logo %}
@@ -137,16 +136,19 @@
             $(document).ready(function() {
                 var rulesShown = true;
 
+                {# Hide sidebar #}
                 $("#hideIcon").click(function() {
                     $(".sidebar").addClass("d-none");
-                    $("#showIcon").removeClass("d-none");
+                    $("#placeholderSidebar").removeClass("d-none");
                 })
 
+                {# Show sidebar #}
                 $("#showIcon").click(function() {
                     $(".sidebar").removeClass("d-none");
-                    $("#showIcon").addClass("d-none");
+                    $("#placeholderSidebar").addClass("d-none");
                 })
 
+                {# Toggle rules #}
                 $("#hideRules").click(function() {
                     if (rulesShown) {
                         $(".rules").each(function() {
