@@ -19,7 +19,7 @@ def gameDispatcher(request, lang='en', puzzleName='skyscrapers'):
 		context = cb.BuildDefault(context)
 		context = cb.Build(puzzleName, lang=lang, context=context)
 		return render(request, f'main/games/{puzzleName}.html', context)
-	except Exception:
+	except KeyError as e:
 		return HttpResponseNotFound()
 
 

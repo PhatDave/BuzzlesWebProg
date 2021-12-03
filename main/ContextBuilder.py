@@ -21,7 +21,7 @@ def AddPuzzles(context):
 	context['puzzleGameIcons'] = []
 	for i in os.listdir('main/static/main/imgs/games'):
 		fName = i.split('.')[0]
-		context['puzzleGameIcons'].append({"img": i, "name": fName})
+		context['puzzleGameIcons'].append({"img": i, "name": fName, "lowerName": fName.lower()})
 	return context
 
 
@@ -29,5 +29,5 @@ def AddFlags(context):
 	context['langFlags'] = []
 	for i in os.listdir('main/static/main/imgs/lang'):
 		fName = i.split('.')[0]
-		context['langFlags'].append({"img": i, "name": fName})
+		context['langFlags'].append({"img": i, "name": fName, "lowerName": fName.lower()})
 	return context
