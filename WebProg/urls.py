@@ -22,6 +22,8 @@ from main.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('skyscrapers/', skyscrapers, name="skyscrapers"),
+    path('login/', login, name="login"),
+    path('register/', register, name="register"),
+    path('<str:puzzleName>/', gameDispatcher, name="gameDispatcher"),
     path('', index, name='index'),
 ]

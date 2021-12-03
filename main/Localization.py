@@ -1,7 +1,7 @@
 class Localization:
 	def __init__(self):
 		self.content = {
-			'Skyscrapers': {
+			'skyscrapers': {
 				'en': {
 					'puzzleTitle': 'Skyscrapers',
 					'puzzleDesc': 'Skyscrapers also known as "Towers" is a logic puzzle with simple rules and challenging solutions. ',
@@ -22,7 +22,7 @@ class Localization:
 						"6x6 Easy",
 						"6x6 Normal",
 						"6x6 Hard",
-					]
+					],
 				}
 			}
 		}

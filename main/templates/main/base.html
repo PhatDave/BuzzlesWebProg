@@ -32,6 +32,16 @@
                <div class="row container-fluid">
                   {# TODO: Unretardify images #}
                   <div class="row text-center d-flex justify-content-between align-items-center">
+{#                      TODO: Load these dynamically too #}
+
+                    {% for lang in langFlags %}
+{#                      TODO: Figure out a way of doing them better than this than col3 #}
+                        <div class="col-3">
+                        {#                        Also has lang.name #}
+                           <img src="{% static '{{ lang.img }}' %}" class="img-fluid border border-dark border-2">
+                        </div>
+                    {% endfor %}
+
                      <div class="col-3">
                         <img src="{% static 'main/imgs/lang/en.png' %}" class="img-fluid border border-dark border-2">
                      </div>
@@ -78,8 +88,8 @@
                      Hide Rules
                   </div>
                </div>
-               {#    TODO: add links to difficulties#}
                <div class="row">
+               {#    TODO: add links to difficulties#}
                   <div class="col-12">
                      <ul id="diffList">
                         {% for diff in difficultyTable %}
@@ -100,7 +110,7 @@
                      <span class="px-3">12:34</span>
                      <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-left"></i></button>
                      <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-right"></i></button>
-                     {# TODO: JS the two bitches #}
+                     {# TODO: JS the two buttons #}
                      {#    https://getbootstrap.com/docs/5.0/utilities/display/ #}
                      <div class="d-none">Zoom bar</div>
                      <div class="d-none">Settings</div>
@@ -121,6 +131,14 @@
                {# TODO: Add more puzzl dynamically #}
                {# TODO: Oh you can use the context of the website being loaded inside of base, neat #}
                <div class="col-12">
+{#                TODO: Ask professor why no work :( #}
+                   {% for game in puzzleGameIcons %}
+                      <figure class="figure m-2">
+                         <img src="{% static 'main/imgs/games/{{ game.img }}' %}" class="mx-auto figure-img img-fluid">
+                         <figcaption class="figure-caption">{{ game.name }}</figcaption>
+                      </figure>
+                   {% endfor %}
+
                   <figure class="figure m-2">
                      <img src="{% static 'main/imgs/games/Futoshiki.png' %}" class="mx-auto figure-img img-fluid">
                      <figcaption class="figure-caption">Futoshiki</figcaption>
