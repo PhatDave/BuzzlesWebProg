@@ -50,9 +50,6 @@
         ValidateBoard();
     })
 
-    const task = "{{ taskJ }}".split('/');
-    const solution = "{{ solutionJ }}".split('/');
-    const boardSize = {{ pSize }};
 
     for (let i = 0; i < boardSize; i++) {
         $(".clue-top#cell-clue" + i).val(task[i]);

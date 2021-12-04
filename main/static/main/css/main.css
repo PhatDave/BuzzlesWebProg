@@ -55,3 +55,7 @@ a:active {
     font-size: calc((3vw + 3vh) / 2);
     background-color: #CCC;
 }
+
+.invalidCell {
+    border: 2px solid red;
+}

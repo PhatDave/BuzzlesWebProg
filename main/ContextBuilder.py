@@ -9,7 +9,7 @@ locals = Localization()
 def Build(puzzleName, context, lang='en', diff=0):
 	for i, (k, v) in enumerate(locals.content[puzzleName][lang].items()):
 		context[k] = v
-	context = AddPuzzleSize(context, puzzleName, diff)
+	context = AddPuzzleSize(context, puzzleName, int(diff))
 	return context
 
 

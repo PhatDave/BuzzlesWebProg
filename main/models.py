@@ -8,6 +8,7 @@ from django.db.models import Model
 class SkyscrapersPuzzle(models.Model):
 	task = models.CharField(max_length=128, blank=False)
 	solution = models.CharField(max_length=256, blank=False)
+	difficulty = models.IntegerField(blank=False, default=0)
 
 
 class User(models.Model):

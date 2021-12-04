@@ -135,6 +135,65 @@
 		<script>
 			$(document).ready(function() {
 			    let rulesShown = true;
+                {# TODO: Move these to skyscrapers too #}
+                const task = "{{ taskJ }}".split('/');
+                const solution = "{{ solutionJ }}".split('/');
+                const boardSize = {{ pSize }};
+
+                {# Format solution to mimic board #}
+                let solutionBoard = []
+                let temp = [];
+                for (let i = 0; i < (boardSize * boardSize); i++) {
+                    if (i % boardSize == 0) {
+                        solutionBoard.push(temp);
+                        temp = [];
+                    }
+                    temp.push(solution[i]);
+                }
+                solutionBoard.push(temp);
+                solutionBoard = solutionBoard.splice(1)
+                {#console.log(solutionBoard);#}
+
+                {# Format task to top-bottom-left-right #}
+                let tasks = {
+                    "top": [],
+                    "bottom": [],
+                    "left": [],
+                    "right": [],
+                }
+                for (let i = 0; i < boardSize; i++) {
+                    tasks["top"].push(task[i]);
+                    tasks["bottom"].push(task[i + boardSize]);
+                    tasks["right"].push(task[i + 2 * boardSize]);
+                    tasks["left"].push(task[i + 3 * boardSize]);
+                }
+                {#console.log(tasks);#}
+
+                let taskRows = {
+                    "top": [],
+                    "bottom": [],
+                    "left": [],
+                    "right": [],
+                }
+                for (let i = 0; i < boardSize; i++) {
+                    taskRows["top"].push([]);
+                    taskRows["bottom"].push([]);
+                    for (let j = 0; j < boardSize; j++) {
+                        taskRows["top"][i].push(j.toString() + i.toString());
+                    }
+                    rowCopy = JSON.parse(JSON.stringify(taskRows["top"][i]));
+                    taskRows["bottom"][i] = rowCopy.reverse()
+                }
+                for (let i = 0; i < boardSize; i++) {
+                    taskRows["left"].push([]);
+                    taskRows["right"].push([]);
+                    for (let j = 0; j < boardSize; j++) {
+                        taskRows["left"][i].push(i.toString() + j.toString());
+                    }
+                    rowCopy = JSON.parse(JSON.stringify(taskRows["left"][i]));
+                    taskRows["right"][i] = rowCopy.reverse()
+                }
+                {#console.log(taskRows);#}
 
 			    function GetBoard() {
 			        let board = [];
@@ -148,10 +207,46 @@
 			        return board
 			    }
 
+                function MarkErrorsBySolution(board) {
+			        for (let i = 0; i < boardSize; i++) {
+                        for (let j = 0; j < boardSize; j++) {
+                            if (board[i][j] != solutionBoard[i][j] && board[i][j] > 0) {
+                                $("#cell" + i + j).addClass("invalidCell");
+                            } else {
+                                $("#cell" + i + j).removeClass("invalidCell");
+                            }
+                        }
+                    }
+                }
+
+                function IsRowGood(row, task) {
+                    let visible = 0;
+                    let highest = 0;
+                    $.each(row, function(k, v) {
+                        let cell = $("#cell" + v);
+                        if (cell.val() > highest) {
+                            highest = cell.val();
+                            visible ++;
+                        }
+                    })
+                    return visible == task
+                }
+
 			    {# TODO: Finish this function and move the skyscraper related functions to skyscrapers #}
 			    function ValidateBoard() {
 			        let board = GetBoard();
-			        console.log(board);
+                    {#MarkErrorsBySolution(board);#}
+                    $.each(taskRows, function(index, value) {
+                        for (let i = 0; i < boardSize; i++) {
+                            let taskCell = $(".cell-clue.clue-" + index + "#cell-clue" + i);
+                            if (!IsRowGood(value[i], taskCell.val())) {
+                                console.log(taskCell, "no good");
+                                taskCell.addClass("invalidCell");
+                            } else {
+                                taskCell.removeClass("invalidCell");
+                            }
+                        }
+                    })
 			    }
 
 			    {# Hide sidebar #}
