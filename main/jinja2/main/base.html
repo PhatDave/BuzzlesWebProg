@@ -37,7 +37,6 @@
 							{% for lang in langFlags %}
                                 {% with "main/imgs/lang/"|add:lang.img|add:"" as langI %}
                                     <div class="col-3">
-{#                            <a href={% url 'main:gameDispatcher' game.lowerName %}>#}
                                         <a href="{% url 'main:switchLang' lang.name %}"><img src="{% static langI %}" class="img-fluid border border-dark border-2"></a>
                                     </div>
                                 {% endwith %}
@@ -69,16 +68,23 @@
 					</div>
 					<div class="row text-center py-3">
 						<div class="col-12" id="hideRules">
-							{# TODO: Add JS #}
 							Hide Rules
 						</div>
 					</div>
 					<div class="row">
+
+{#							{% for lang in langFlags %}#}
+{#                                {% with "main/imgs/lang/"|add:lang.img|add:"" as langI %}#}
+{#                                    <div class="col-3">#}
+{#                                        <a href="{% url 'main:switchLang' lang.name %}"><img src="{% static langI %}" class="img-fluid border border-dark border-2"></a>#}
+{#                                    </div>#}
+{#                                {% endwith %}#}
+{#							{% endfor %}#}
 						{# TODO: add links to difficulties #}
 						<div class="col-12">
 							<ul id="diffList">
 								{% for diff in difficultyTable %}
-								<li>{{ diff }}</li>
+                                    <a href="{% url 'main:switchDiff' diff.id %}" class="black"><li>{{ diff.text }}</li></a>
 								{% endfor %}
 							</ul>
 						</div>
@@ -106,7 +112,6 @@
 						{% block game %}
 						{% endblock %}
 						<div class="py-4">
-							{# TODO: Maybe make responsive with JS one day #}
 							<button class="w-25 btn btn-outline-dark rounded-0">Done</button>
 						</div>
 						<div>

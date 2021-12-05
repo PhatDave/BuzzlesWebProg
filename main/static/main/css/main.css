@@ -59,3 +59,19 @@ a:active {
 .invalidCell {
     border: 2px solid red;
 }
+
+a.black:link {
+    color: black;
+}
+
+a.black:visited {
+    color: black;
+}
+
+a.black:hover {
+    color: black;
+}
+
+a.black:active {
+    color: black;
+}

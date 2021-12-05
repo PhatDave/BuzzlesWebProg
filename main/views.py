@@ -21,6 +21,11 @@ def switchLang(request, lang):
 	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
 
 
+def switchDiff(request, diff):
+	request.session['diff'] = diff
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+
+
 def GetRequestValue(request, val, default=0):
 	try: return request.GET[val]
 	except KeyError: return default
@@ -32,11 +37,11 @@ def GetSessionVal(request, val, default=0):
 	finally: return request.session[val]
 
 
-def gameDispatcher(request, puzzleName='skyscrapers', lang='en'):
+def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0):
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
 	lang = GetSessionVal(request, 'lang', lang)
-	diff = GetRequestValue(request, 'diff')
+	diff = GetSessionVal(request, 'diff', diff)
 	try:
 		context = cb.BuildDefault(context)
 		context = cb.Build(puzzleName,

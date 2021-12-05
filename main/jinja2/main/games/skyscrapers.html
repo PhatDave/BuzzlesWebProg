@@ -3,7 +3,6 @@
 {% extends 'main/base.html' %}
 {% load static %}
 {% block logo %}
-{# TODO: Use form and input fields #}
 <img src="{% static 'main/imgs/skyscrapers-logo.png' %}">
 {% endblock %}
 {% block game %}
@@ -158,7 +157,6 @@
         }
     }
 
-    {# TODO: Finish this function and move the skyscraper related functions to skyscrapers #}
     function ValidateBoard() {
         let board = GetBoard();
         {#MarkErrorsBySolution(board);#}
