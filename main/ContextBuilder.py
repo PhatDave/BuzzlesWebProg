@@ -64,4 +64,5 @@ def AddTaskAndSolution(context, puzzle):
 	context['solution'] = solution
 	context['taskJ'] = "/".join(task)
 	context['solutionJ'] = "/".join(solution)
+	context['puzzleID'] = puzzle.id
 	return context

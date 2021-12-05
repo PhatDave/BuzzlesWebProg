@@ -38,11 +38,12 @@ def GetSessionVal(request, val, default=0):
 	finally: return request.session[val]
 
 
-def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0):
+def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
 	lang = GetSessionVal(request, 'lang', lang)
 	diff = GetSessionVal(request, 'diff', diff)
+	id = GetSessionVal(request, 'puzzleID', id)
 
 	model = GetModelFromName(puzzleName)
 	try:
@@ -51,7 +52,8 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0):
 						   lang=lang,
 						   context=context,
 						   diff=diff)
-		puzzle = GetPuzzle(model, diff=diff)
+		puzzle = GetPuzzle(model, id=id, diff=diff)
+		request.session['puzzleID'] = puzzle.id
 		context = cb.AddTaskAndSolution(context, puzzle)
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
@@ -77,5 +79,7 @@ def GetPuzzle(model, id=-1, diff=0):
 	if id == -1:
 		last = model.objects.filter(difficulty=diff).last().id
 		pick = random.randint(1, last)
+	else:
+		pick = id
 	puzzle = get_object_or_404(model, pk=pick, difficulty=diff)
 	return puzzle
