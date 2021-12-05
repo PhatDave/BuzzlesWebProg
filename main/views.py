@@ -1,7 +1,10 @@
 import os
 
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import HttpResponse, HttpResponseNotFound, \
+	HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
+
 import main.ContextBuilder as cb
 from main.models import *
 
@@ -13,10 +16,27 @@ def index(request):
 	return render(request, 'main/index.html', context)
 
 
-def gameDispatcher(request, lang='en', puzzleName='skyscrapers'):
+def switchLang(request, lang):
+	request.session['lang'] = lang
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+
+
+def GetRequestValue(request, val, default=0):
+	try: return request.GET[val]
+	except KeyError: return default
+
+
+def GetSessionVal(request, val, default=0):
+	try: return request.session[val]
+	except KeyError: request.session[val] = default
+	finally: return request.session[val]
+
+
+def gameDispatcher(request, puzzleName='skyscrapers', lang='en'):
 	context = {}
-	try: diff = request.GET['diff']
-	except KeyError: diff = 0
+	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
+	lang = GetSessionVal(request, 'lang', lang)
+	diff = GetRequestValue(request, 'diff')
 	try:
 		context = cb.BuildDefault(context)
 		context = cb.Build(puzzleName,

@@ -35,11 +35,12 @@
 						<div class="row text-center d-flex justify-content-between align-items-center">
 							{# Prof says: Look at https://docs.djangoproject.com/en/3.2/topics/templates/#django.template.backends.jinja2.Jinja2 #}
 							{% for lang in langFlags %}
-							{% with "main/imgs/lang/"|add:lang.img|add:"" as langI %}
-							<div class="col-3">
-								<img src="{% static langI %}" class="img-fluid border border-dark border-2">
-							</div>
-							{% endwith %}
+                                {% with "main/imgs/lang/"|add:lang.img|add:"" as langI %}
+                                    <div class="col-3">
+{#                            <a href={% url 'main:gameDispatcher' game.lowerName %}>#}
+                                        <a href="{% url 'main:switchLang' lang.name %}"><img src="{% static langI %}" class="img-fluid border border-dark border-2"></a>
+                                    </div>
+                                {% endwith %}
 							{% endfor %}
 						</div>
 					</div>
@@ -118,14 +119,14 @@
 					</div>
 					<div class="col-12">
 						{% for game in puzzleGameIcons %}
-						<a href={% url 'main:gameDispatcher' game.lowerName %}>
-						<figure class="figure m-2">
-							{% with "main/imgs/games/"|add:game.img|add:"" as gameI %}
-							<img src="{% static gameI %}" class="mx-auto figure-img img-fluid">
-							{% endwith %}
-							<figcaption class="figure-caption">{{ game.name }}</figcaption>
-						</figure>
-						</a>
+                            <a href={% url 'main:gameDispatcher' game.lowerName %}>
+                                <figure class="figure m-2">
+                                    {% with "main/imgs/games/"|add:game.img|add:"" as gameI %}
+                                        <img src="{% static gameI %}" class="mx-auto figure-img img-fluid">
+                                    {% endwith %}
+                                    <figcaption class="figure-caption">{{ game.name }}</figcaption>
+                                </figure>
+                            </a>
 						{% endfor %}
 					</div>
 				</div>

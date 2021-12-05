@@ -151,7 +151,11 @@
                 visible ++;
             }
         })
-        return visible == task
+        if (visible == 0) {
+            return true
+        } else {
+            return visible == task
+        }
     }
 
     {# TODO: Finish this function and move the skyscraper related functions to skyscrapers #}
