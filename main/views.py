@@ -23,7 +23,14 @@ def switchLang(request, lang):
 
 
 def switchDiff(request, diff):
-	request.session['diff'] = diff
+	if diff != request.session['diff']:
+		request.session['diff'] = diff
+		request.session['puzzleID'] = -1
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+
+
+def getNewPuzzle(request):
+	request.session['puzzleID'] = -1
 	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
 
 
@@ -39,8 +46,15 @@ def GetSessionVal(request, val, default=0):
 
 
 def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
+	# LoadPuzzlesFromFile()
+	if not IsValidGame(puzzleName):
+		return HttpResponseNotFound()
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
+	# What fucking retardation??????????????????????
+	if '.ico' in puzzleName:
+		puzzleName = 'skyscrapers'
+		request.session['puzzleName'] = puzzleName
 	lang = GetSessionVal(request, 'lang', lang)
 	diff = GetSessionVal(request, 'diff', diff)
 	id = GetSessionVal(request, 'puzzleID', id)
@@ -58,6 +72,24 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
+
+def IsValidGame(puzzleName):
+	model = GetModelFromName(puzzleName)
+	if model is None:
+		return False
+	return True
+
+
+def LoadPuzzlesFromFile():
+	for diff in [0, 3, 6]:
+		tasks = []
+		solutions = []
+		with open(f"{diff}tasks.txt", 'r') as f:
+			tasks = f.readlines()
+		with open(f"{diff}solutions.txt", 'r') as f:
+			solutions = f.readlines()
+		for i, v in enumerate(tasks):
+			SkyscrapersPuzzle.objects.create(task=tasks[i][:-1], solution=solutions[i][:-1], difficulty=diff)
 
 
 def login(request):
@@ -77,9 +109,10 @@ def GetModelFromName(puzzleName):
 
 def GetPuzzle(model, id=-1, diff=0):
 	if id == -1:
-		last = model.objects.filter(difficulty=diff).last().id
-		pick = random.randint(1, last)
+		items = list(model.objects.filter(difficulty=diff).all())
+		item = random.choice(items)
+		return item
 	else:
 		pick = id
-	puzzle = get_object_or_404(model, pk=pick, difficulty=diff)
-	return puzzle
+		puzzle = get_object_or_404(model, pk=pick, difficulty=diff)
+		return puzzle
