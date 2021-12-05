@@ -1,4 +1,5 @@
 import os
+import random
 
 from django.http import HttpResponse, HttpResponseNotFound, \
 	HttpResponseRedirect
@@ -42,13 +43,15 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0):
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
 	lang = GetSessionVal(request, 'lang', lang)
 	diff = GetSessionVal(request, 'diff', diff)
+
+	model = GetModelFromName(puzzleName)
 	try:
 		context = cb.BuildDefault(context)
 		context = cb.Build(puzzleName,
 						   lang=lang,
 						   context=context,
 						   diff=diff)
-		puzzle = get_object_or_404(SkyscrapersPuzzle, pk=1)
+		puzzle = GetPuzzle(model, diff=diff)
 		context = cb.AddTaskAndSolution(context, puzzle)
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
@@ -63,3 +66,16 @@ def login(request):
 def register(request):
 	context = {}
 	return render(request, 'main/register.html', context)
+
+
+def GetModelFromName(puzzleName):
+	if puzzleName == 'skyscrapers':
+		return SkyscrapersPuzzle
+
+
+def GetPuzzle(model, id=-1, diff=0):
+	if id == -1:
+		last = model.objects.filter(difficulty=diff).last().id
+		pick = random.randint(1, last)
+	puzzle = get_object_or_404(model, pk=pick, difficulty=diff)
+	return puzzle

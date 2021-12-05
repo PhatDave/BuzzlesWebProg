@@ -72,15 +72,6 @@
 						</div>
 					</div>
 					<div class="row">
-
-{#							{% for lang in langFlags %}#}
-{#                                {% with "main/imgs/lang/"|add:lang.img|add:"" as langI %}#}
-{#                                    <div class="col-3">#}
-{#                                        <a href="{% url 'main:switchLang' lang.name %}"><img src="{% static langI %}" class="img-fluid border border-dark border-2"></a>#}
-{#                                    </div>#}
-{#                                {% endwith %}#}
-{#							{% endfor %}#}
-						{# TODO: add links to difficulties #}
 						<div class="col-12">
 							<ul id="diffList">
 								{% for diff in difficultyTable %}
