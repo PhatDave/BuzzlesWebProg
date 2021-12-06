@@ -75,3 +75,7 @@ a.black:hover {
 a.black:active {
     color: black;
 }
+
+.invalidEntry {
+    color: red;
+}

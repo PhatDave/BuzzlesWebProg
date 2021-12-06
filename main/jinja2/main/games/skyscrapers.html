@@ -1,40 +1,39 @@
-
-
 {% extends 'main/base.html' %}
 {% load static %}
+
 {% block logo %}
-<img src="{% static 'main/imgs/skyscrapers-logo.png' %}">
+    <img src="{% static 'main/imgs/skyscrapers-logo.png' %}">
 {% endblock %}
 {% block game %}
 {#    <img src="{% static 'main/imgs/exampleSkyscrapers.png' %}" alt="">#}
-<div class="row">
-	<div class="col-lg-3"></div>
-	<div class="col-lg-6">
-		{#        TODO: Make the DONE button post form? #}
-		<form action="#">
-			<div class="row text-center d-flex justify-content-center">
-				{% for i in pSizeArray %}
-				<input type="text" maxlength="1" class="cell-clue clue-top p-0 text-center" readonly="true" id="cell-clue{{ i }}">
-				{% endfor %}
-			</div>
-			{% for i in pSizeArray %}
-			<div class="row text-center d-flex justify-content-center">
-				<input type="text" maxlength="1" class="cell-clue clue-left p-0 text-center" readonly="true" id="cell-clue{{ i }}">
-				{% for j in pSizeArray %}
-				<input type="text" maxlength="1" class="cell p-0 text-center" readonly="true" id="cell{{ i }}{{ j }}">
-				{% endfor %}
-				<input type="text" maxlength="1" class="cell-clue clue-right p-0 text-center" readonly="true" id="cell-clue{{ i }}">
-			</div>
-			{% endfor %}
-			<div class="row text-center d-flex justify-content-center">
-				{% for i in pSizeArray %}
-				<input type="text" maxlength="1" class="cell-clue clue-bottom p-0 text-center" readonly="true" id="cell-clue{{ i }}">
-				{% endfor %}
-			</div>
-		</form>
-	</div>
-	<div class="col-lg-3"></div>
-</div>
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+            {#        TODO: Make the DONE button post form? #}
+            <form action="#">
+                <div class="row text-center d-flex justify-content-center">
+                    {% for i in pSizeArray %}
+                    <input type="text" maxlength="1" class="cell-clue clue-top p-0 text-center" readonly="true" id="cell-clue{{ i }}">
+                    {% endfor %}
+                </div>
+                {% for i in pSizeArray %}
+                <div class="row text-center d-flex justify-content-center">
+                    <input type="text" maxlength="1" class="cell-clue clue-left p-0 text-center" readonly="true" id="cell-clue{{ i }}">
+                    {% for j in pSizeArray %}
+                    <input type="text" maxlength="1" class="cell p-0 text-center" readonly="true" id="cell{{ i }}{{ j }}">
+                    {% endfor %}
+                    <input type="text" maxlength="1" class="cell-clue clue-right p-0 text-center" readonly="true" id="cell-clue{{ i }}">
+                </div>
+                {% endfor %}
+                <div class="row text-center d-flex justify-content-center">
+                    {% for i in pSizeArray %}
+                    <input type="text" maxlength="1" class="cell-clue clue-bottom p-0 text-center" readonly="true" id="cell-clue{{ i }}">
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-3"></div>
+    </div>
 {% endblock %}
 {% block JQuery %}
     const task = "{{ taskJ }}".split('/');

@@ -1,7 +1,7 @@
 import os
 import random
 
-from django.http import HttpResponse, HttpResponseNotFound, \
+from django.http import HttpResponseNotFound, \
 	HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
@@ -14,7 +14,8 @@ languageIcons = os.listdir('main/static/main/imgs/lang')
 
 def index(request):
 	context = {}
-	return render(request, 'main/index.html', context)
+	# return render(request, 'main/index.html', context)
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers',)))
 
 
 def switchLang(request, lang):
@@ -73,6 +74,7 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 	except KeyError as e:
 		return HttpResponseNotFound()
 
+
 def IsValidGame(puzzleName):
 	model = GetModelFromName(puzzleName)
 	if model is None:
@@ -92,14 +94,45 @@ def LoadPuzzlesFromFile():
 			SkyscrapersPuzzle.objects.create(task=tasks[i][:-1], solution=solutions[i][:-1], difficulty=diff)
 
 
-def login(request):
+def userPage(request):
 	context = {}
+	if GetSessionVal(request, 'userName', None) is not None:
+		return render(request, 'main/userPage.html')
+	else:
+		return HttpResponseRedirect(reverse('main:login'))
+
+
+def login(request):
+	context = {'title': "Login"}
+	if GetSessionVal(request, 'userName', None) is not None:
+		return HttpResponseRedirect(reverse('main:userPage'))
 	return render(request, 'main/login.html', context)
 
 
+def loginSubmit(request):
+	try:
+		# TODO: Also check for username (for authentication) in case email fails
+		user = User.objects.get(email=request.POST['email'],
+								 password=request.POST['password'])
+	except (KeyError, User.DoesNotExist) as e:
+		# TODO: Deal with this context in html for failed login
+		context = {'loginFailed': request.POST['email']}
+		return render(request, 'main/login.html', context)
+
+
 def register(request):
-	context = {}
+	context = {'title': "Register"}
 	return render(request, 'main/register.html', context)
+
+
+def registerSubmit(request):
+	try:
+		user = User.objects.get(email=request.POST['email'],
+								 password=request.POST['password'])
+	except (KeyError, User.DoesNotExist) as e:
+		# TODO: Deal with this context in html for failed login
+		context = {'loginFailed': request.POST['email']}
+		return render(request, 'main/register.html', context)
 
 
 def GetModelFromName(puzzleName):
