@@ -10,8 +10,10 @@
                         <div class="card-body p-5 text-center">
                             <div class="mb-md-5 mt-md-4 pb-5">
                                 <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
+{#                                TODO: Maybe do something so the div always takes up the same amount of space, shown or not #}
+                                <div class="p-0 invalidEntry d-none" id="emptyFieldError">All fields must be filled</div>
                                 <p class="py-2"></p>
-                                <form action="{% url 'main:registerSubmit' %}" method="POST">
+                                <form id="registerForm" action="{% url 'main:registerSubmit' %}" method="POST">
                                     {% csrf_token %}
                                     <div class="form-outline form-white mb-4">
                                         <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Username"/>
@@ -47,6 +49,7 @@
 {% endblock %}
 
 {% block scirpt %}
+    const usernameField = $("#username");
     const emailField = $("#email");
     const invalidEmailElement = $(".invalidEmail");
     const passwordField1 = $("#password1");
@@ -290,4 +293,20 @@
         }
     }
     const password2Validator = new Password2Validator();
+
+    $("#registerForm").submit(function() {
+        let username = usernameField.val();
+        let email = emailField.val();
+        let password1 = passwordField1.val();
+        let password2 = passwordField2.val();
+        if (username.length > 0 && email.length > 0 && password1.length > 0 && password2.length > 0) {
+            return true
+        } else {
+            $("#emptyFieldError").removeClass("d-none");
+            setTimeout(function() {
+                $("#emptyFieldError").addClass("d-none");
+            }, 2000)
+            return false
+        }
+    })
 {% endblock %}

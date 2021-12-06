@@ -150,10 +150,8 @@ def registerSubmit(request):
 		m.update(password.encode('utf-8'))
 		m.update(salt.encode('utf-8'))
 		hashedPassword = m.hexdigest()
-		user = User.objects.create(email=email,
-								   password=hashedPassword,
-								   username=username,
-								   passwordSalt=salt)
+		User.objects.create(email=email, password=hashedPassword,
+							username=username, passwordSalt=salt)
 	except (KeyError, User.DoesNotExist, AssertionError) as e:
 		context = {'error': "Unknown error"}
 	except (EmailExistsException, UsernameExistsException) as e:
