@@ -29,7 +29,7 @@
                                     <div class="form-outline form-white mb-4">
                                         <input type="password" id="password2" class="form-control form-control-lg" placeholder="Password"/>
                                         <label class="form-label" for="password2">Password (Again)</label>
-                                        <div class="small d-none invalidEntry p-0 invalidPassword"></div>
+                                        <div class="small d-none invalidEntry p-0 invalidPassword secondPassword"></div>
                                     </div>
                                     {#                            TODO: Handle the submit #}
                                     <button class="btn btn-outline-light btn-lg px-5" type="submit">Register</button>
@@ -47,4 +47,247 @@
 {% endblock %}
 
 {% block scirpt %}
+    const emailField = $("#email");
+    const invalidEmailElement = $(".invalidEmail");
+    const passwordField1 = $("#password1");
+    const passwordField2 = $("#password2");
+    const invalidPassword1 = $(".mainPassword");
+    const invalidPassword2 = $(".secondPassword");
+
+    emailField.keyup(function() {
+        let email = $(this).val();
+        emailValidator.Validate(email);
+    })
+    emailField.change(function() {
+        let email = $(this).val();
+        emailValidator.Validate(email);
+    })
+
+    class IValidator {
+        invalidFieldElement = null;
+
+        constructor() {
+            this.next = null;
+        }
+
+        Validate(text) {
+            if (this.ValidateLength(text)) {
+                this.ConcreteValidate(text);
+            }
+        }
+        ConcreteValidate(text) {
+            this.next.Validate(text);
+        }
+
+        AddValidator(validator) {
+            if (this.next == null) {
+                this.next = validator;
+                this.next.invalidFieldElement = this.invalidFieldElement
+            } else {
+                this.next.AddValidator(validator);
+            }
+        }
+        NextValidate(text) {
+            if (this.next != null) {
+                this.next.Validate(text);
+            }
+        }
+
+        DisplayElement(text) {
+            this.invalidFieldElement.removeClass("d-none");
+            this.invalidFieldElement.text(text);
+        }
+        HideElement() {
+            this.invalidFieldElement.addClass("d-none");
+            this.invalidFieldElement.text("");
+        }
+
+        ValidateLength(text) {
+            if (text.length == 0) {
+                this.HideElement();
+                return false
+            }
+            return true
+        }
+        Contains(text, substr, message) {
+            console.log(text, substr, message);
+            if (text.indexOf(substr) == -1) {
+                this.DisplayElement(message);
+            } else {
+                this.HideElement();
+                this.NextValidate(text);
+            }
+        }
+        Count(text, substr, index, message) {
+            if (text.split(substr)[index].length == 0) {
+                this.DisplayElement(message);
+            } else {
+                this.HideElement();
+                this.NextValidate(text)
+            }
+        }
+    }
+
+    class NoSpaceValidator extends IValidator {
+        ConcreteValidate(email) {
+            if (email.indexOf(" ") != -1) {
+                this.DisplayElement("Email must not contain a space");
+            } else {
+                this.HideElement();
+                this.NextValidate(email);
+            }
+        }
+    }
+    class AtValidator extends IValidator {
+        ConcreteValidate(email) {
+            this.Contains(email, "@", "Email must contain a @")
+        }
+    }
+    class AtLengthValidatorLeft extends IValidator {
+        ConcreteValidate(email) {
+            this.Count(email, "@", 0, "Email must contain at least 1 character before @");
+        }
+    }
+    class AtLengthValidatorRight extends IValidator {
+        ConcreteValidate(email) {
+            this.Count(email, "@", 1, "Email must contain at least 1 character after @");
+        }
+    }
+    class DotValidator extends IValidator {
+        ConcreteValidate(email) {
+            this.Contains(email, ".", "Email must contain a .")
+        }
+    }
+    class DotLengthValidatorLeft extends IValidator {
+        ConcreteValidate(email) {
+            this.Count(email, ".", 0, "Email must contain at least 1 character before .");
+        }
+    }
+    class DotLengthValidatorRight extends IValidator {
+        ConcreteValidate(email) {
+            this.Count(email, ".", 1, "Email must contain at least 1 character after .");
+        }
+    }
+
+    class EmailValidator {
+        constructor() {
+            this.validator = new IValidator();
+            this.validator.invalidFieldElement = invalidEmailElement;
+
+            this.validator.AddValidator(new NoSpaceValidator())
+            this.validator.AddValidator(new AtValidator())
+            this.validator.AddValidator(new AtLengthValidatorLeft())
+            this.validator.AddValidator(new AtLengthValidatorRight())
+            this.validator.AddValidator(new DotValidator())
+            this.validator.AddValidator(new DotLengthValidatorLeft())
+            this.validator.AddValidator(new DotLengthValidatorRight())
+        }
+
+        Validate(email) {
+            this.validator.Validate(email);
+        }
+    }
+    const emailValidator = new EmailValidator();
+
+    passwordField1.keyup(function() {
+        let password = $(this).val();
+        password1Validator.Validate(password);
+    })
+    passwordField1.change(function() {
+        let password = $(this).val();
+        password1Validator.Validate(password);
+    })
+
+    class PasswordLengthValidator extends IValidator {
+        ConcreteValidate(text) {
+            if (text.length < 8) {
+                this.DisplayElement("Password must be at least " + 8 + " characters long");
+            } else {
+                this.HideElement();
+                this.NextValidate(text);
+            }
+        }
+    }
+    class PasswordDigitValidator extends IValidator {
+        ConcreteValidate(text) {
+            try {
+                if (text.match(/[0-9]/g).length < 1) {
+                    this.DisplayElement("Password must contain at least " + 1 + " digit");
+                } else {
+                    this.HideElement();
+                    this.NextValidate(text);
+                }
+            } catch (TypeError) {
+                this.DisplayElement("Password must contain at least " + 1 + " digit");
+            }
+        }
+    }
+    class PasswordSpecialCharacterValidator extends IValidator {
+        ConcreteValidate(text) {
+            try {
+                if (text.match(/[\!\"\#\$\%\&\/\(\)\=\?\@\{\\\|\€\@\{\}\<\;\:\_\[\]\-\'\*\~\¸\¨\`\,\.\>\<\^\˘\°\˛\˙\´\˝\¨]/g).length < 1) {
+                    this.DisplayElement("Password must contain at least " + 1 + " special character");
+                } else {
+                    this.HideElement();
+                    this.NextValidate(text);
+                }
+            } catch (TypeError) {
+                this.DisplayElement("Password must contain at least " + 1 + " special character");
+            }
+        }
+    }
+
+    class Password1Validator {
+        constructor() {
+            this.validator = new IValidator();
+            this.validator.invalidFieldElement = invalidPassword1;
+
+            this.validator.AddValidator(new PasswordLengthValidator())
+            this.validator.AddValidator(new PasswordDigitValidator())
+            this.validator.AddValidator(new PasswordSpecialCharacterValidator())
+        }
+
+        Validate(password) {
+            this.validator.Validate(password);
+        }
+    }
+    const password1Validator = new Password1Validator();
+
+    passwordField2.keyup(function() {
+        let password1 = passwordField1.val();
+        let password2 = $(this).val();
+        password2Validator.Validate([password1, password2]);
+    })
+    passwordField2.change(function() {
+        let password1 = passwordField1.val();
+        let password2 = $(this).val();
+        password2Validator.Validate([password1, password2]);
+    })
+
+    class PasswordMatchValidator extends IValidator {
+        ConcreteValidate(passwords) {
+            let password1 = passwords[0];
+            let password2 = passwords[1];
+            if (password1 != password2) {
+                this.DisplayElement("Passwords must match");
+            } else {
+                this.HideElement();
+                this.NextValidate(passwords);
+            }
+        }
+    }
+
+    class Password2Validator {
+        constructor() {
+            this.validator = new IValidator();
+            this.validator.invalidFieldElement = invalidPassword2;
+
+            this.validator.AddValidator(new PasswordMatchValidator())
+        }
+
+        Validate(passwords) {
+            this.validator.Validate(passwords);
+        }
+    }
+    const password2Validator = new Password2Validator();
 {% endblock %}

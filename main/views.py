@@ -109,6 +109,7 @@ def login(request):
 	return render(request, 'main/login.html', context)
 
 
+# TODO: Encode passwords w base64 and then hash?; to make sure special characters don't explode
 def loginSubmit(request):
 	try:
 		# TODO: Also check for username (for authentication) in case email fails
