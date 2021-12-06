@@ -1,5 +1,7 @@
 import os
 import random
+import hashlib
+import string
 
 from django.http import HttpResponseNotFound, \
 	HttpResponseRedirect
@@ -52,7 +54,7 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 		return HttpResponseNotFound()
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
-	# What fucking retardation??????????????????????
+	# TODO: What fucking retardation??????????????????????
 	if '.ico' in puzzleName:
 		puzzleName = 'skyscrapers'
 		request.session['puzzleName'] = puzzleName
@@ -103,7 +105,9 @@ def userPage(request):
 
 
 def login(request):
-	context = {'title': "Login"}
+	context = {
+		'title': "Login"
+	}
 	if GetSessionVal(request, 'userName', None) is not None:
 		return HttpResponseRedirect(reverse('main:userPage'))
 	return render(request, 'main/login.html', context)
@@ -122,18 +126,60 @@ def loginSubmit(request):
 
 
 def register(request):
-	context = {'title': "Register"}
+	context = {
+		'title': "Register"
+	}
 	return render(request, 'main/register.html', context)
 
 
 def registerSubmit(request):
+	context = {}
 	try:
-		user = User.objects.get(email=request.POST['email'],
-								 password=request.POST['password'])
-	except (KeyError, User.DoesNotExist) as e:
-		# TODO: Deal with this context in html for failed login
-		context = {'loginFailed': request.POST['email']}
+		username = request.POST['username']
+		password = request.POST['password']
+		email = request.POST['email']
+
+		# TODO: do something better later
+		# assert len(password) > 0
+		# assert len(email) > 0
+		EmailExists(email)
+		UsernameExists(username)
+
+		m = hashlib.sha3_256()
+		salt = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+		m.update(password.encode('utf-8'))
+		m.update(salt.encode('utf-8'))
+		hashedPassword = m.hexdigest()
+		user = User.objects.create(email=email,
+								   password=hashedPassword,
+								   username=username,
+								   passwordSalt=salt)
+	except (KeyError, User.DoesNotExist, AssertionError) as e:
+		context = {'error': "Unknown error"}
+	except (EmailExistsException, UsernameExistsException) as e:
+		context = {'error': e.message}
+	finally:
 		return render(request, 'main/register.html', context)
+
+
+def EmailExists(email):
+	if User.objects.filter(email=email).__len__() > 0:
+		raise EmailExistsException
+
+
+def UsernameExists(username):
+	if User.objects.filter(username=username).__len__() > 0:
+		raise UsernameExistsException
+
+
+class EmailExistsException(Exception):
+	def __init__(self):
+		super().__init__("Email already exists")
+
+
+class UsernameExistsException(Exception):
+	def __init__(self):
+		super().__init__("Username already exists")
 
 
 def GetModelFromName(puzzleName):
