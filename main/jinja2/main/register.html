@@ -56,15 +56,6 @@
 {% endblock %}
 
 {% block scirpt %}
-    const timeout = 4000;
-    const fadeTime = 1000;
-    setTimeout(function() {
-        $(".invalidEntry").fadeOut(fadeTime);
-    }, timeout);
-    setTimeout(function() {
-        $(".loginText").removeClass("d-none");
-    }, timeout + fadeTime);
-
     const usernameField = $("#username");
     const emailField = $("#email");
     const invalidEmailElement = $(".invalidEmail");

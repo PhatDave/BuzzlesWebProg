@@ -18,6 +18,15 @@
         {% endblock %}
         <script>
             $(document).ready(function() {
+                const timeout = 4000;
+                const fadeTime = 1000;
+                setTimeout(function() {
+                    $(".invalidEntry").fadeOut(fadeTime);
+                }, timeout);
+                setTimeout(function() {
+                    $(".loginText").removeClass("d-none");
+                }, timeout + fadeTime);
+
                 {% block scirpt %}
                 {% endblock %}
             })
