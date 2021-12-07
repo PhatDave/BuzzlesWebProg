@@ -2,6 +2,8 @@ import os
 import random
 import hashlib
 import string
+import time
+from datetime import datetime
 
 from django.http import HttpResponseNotFound, \
 	HttpResponseRedirect
@@ -33,6 +35,7 @@ def GetSessionVal(request, val, default=0):
 
 def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 	# LoadPuzzlesFromFile()
+	GetSessionVal(request, 'puzzleStart', str(time.mktime(datetime.now().timetuple())))
 	if not IsValidGame(puzzleName):
 		return HttpResponseNotFound()
 	context = {}
@@ -55,6 +58,7 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 		puzzle = GetPuzzle(model, id=id, diff=diff)
 		request.session['puzzleID'] = puzzle.id
 		context = cb.AddTaskAndSolution(context, puzzle)
+		context['puzzleStart'] = request.session['puzzleStart']
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
@@ -69,15 +73,28 @@ def switchDiff(request, diff):
 	if diff != request.session['diff']:
 		request.session['diff'] = diff
 		request.session['puzzleID'] = -1
+		request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
 	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
 
 
 def getNewPuzzle(request):
 	request.session['puzzleID'] = -1
+	request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
 	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
 
 
 def submitSolution(request):
+	username = request.session['username']
+	puzzleID = request.GET['puzzleID']
+	gameTime = request.GET['gameTimer']
+	date = datetime.now()
+
+	PlayedGame.objects.create(user=User.objects.get(username=username),
+							  puzzle=SkyscrapersPuzzle.objects.get(id=puzzleID),
+							  time=gameTime,
+							  date=date)
+
+	# TODO: Return something
 	pass
 
 

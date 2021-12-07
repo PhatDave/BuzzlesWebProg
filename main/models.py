@@ -17,3 +17,10 @@ class User(models.Model):
 	password = models.CharField(max_length=256)
 	passwordSalt = models.CharField(max_length=16)
 # TODO: Add puzzle history, maybe something like puzzleID, time taken to solve and... Link to replay?
+
+
+class PlayedGame(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	puzzle = models.ForeignKey(SkyscrapersPuzzle, on_delete=models.CASCADE)
+	date = models.DateTimeField()
+	time = models.CharField(max_length=20)
