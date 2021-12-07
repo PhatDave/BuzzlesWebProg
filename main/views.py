@@ -98,13 +98,21 @@ def LoadPuzzlesFromFile():
 
 def userPage(request):
 	context = {}
-	if GetSessionVal(request, 'userName', None) is not None:
+	if GetSessionVal(request, 'username', None) is not None:
 		return render(request, 'main/userPage.html')
 	else:
 		return HttpResponseRedirect(reverse('main:login'))
 
 
+def logout(request):
+	request.session['username'] = None
+	return HttpResponseRedirect(reverse('main:login'))
+
+
 def login(request):
+	if IsLogged(request):
+		return HttpResponseRedirect(reverse('main:userPage'))
+
 	context = {
 		'title': "Login"
 	}
@@ -113,19 +121,47 @@ def login(request):
 	return render(request, 'main/login.html', context)
 
 
-# TODO: Encode passwords w base64 and then hash?; to make sure special characters don't explode
 def loginSubmit(request):
+	if IsLogged(request):
+		return HttpResponseRedirect(reverse('main:userPage'))
+
+	email = request.POST['email']
+	password = request.POST['password']
+	user = None
 	try:
-		# TODO: Also check for username (for authentication) in case email fails
-		user = User.objects.get(email=request.POST['email'],
-								 password=request.POST['password'])
-	except (KeyError, User.DoesNotExist) as e:
+		EmailExists(email)
+		UsernameExists(email)
+	except EmailExistsException as e:
+		user = User.objects.get(email=email)
+	except UsernameExistsException as e:
+		user = User.objects.get(username=email)
+	finally:
+		if user is None:
+			FailLogin(request)
+
+		m = hashlib.sha3_256()
+		salt = user.passwordSalt
+		m.update(password.encode('utf-8'))
+		m.update(salt.encode('utf-8'))
+		hashedPassword = m.hexdigest()
+		if hashedPassword != user.password:
+			FailLogin(request)
 		# TODO: Deal with this context in html for failed login
-		context = {'loginFailed': request.POST['email']}
-		return render(request, 'main/login.html', context)
+		context = {}
+		request.session['username'] = user.username
+		# return render(request, 'main/userPage.html', context)
+		return HttpResponseRedirect(reverse('main:userPage'))
+
+
+def FailLogin(request):
+	context = {'loginFailed': request.POST['email']}
+	return render(request, 'main/login.html', context)
 
 
 def register(request):
+	if IsLogged(request):
+		return HttpResponseRedirect(reverse('main:userPage'))
+
 	context = {
 		'title': "Register"
 	}
@@ -133,15 +169,14 @@ def register(request):
 
 
 def registerSubmit(request):
-	context = {}
+	if IsLogged(request):
+		return HttpResponseRedirect(reverse('main:userPage'))
+
 	try:
 		username = request.POST['username']
 		password = request.POST['password']
 		email = request.POST['email']
 
-		# TODO: do something better later
-		# assert len(password) > 0
-		# assert len(email) > 0
 		EmailExists(email)
 		UsernameExists(username)
 
@@ -150,14 +185,27 @@ def registerSubmit(request):
 		m.update(password.encode('utf-8'))
 		m.update(salt.encode('utf-8'))
 		hashedPassword = m.hexdigest()
+
 		User.objects.create(email=email, password=hashedPassword,
 							username=username, passwordSalt=salt)
+		request.session['username'] = username
+		return HttpResponseRedirect(reverse('main:userPage'))
 	except (KeyError, User.DoesNotExist, AssertionError) as e:
 		context = {'error': "Unknown error"}
-	except (EmailExistsException, UsernameExistsException) as e:
-		context = {'error': e.message}
-	finally:
 		return render(request, 'main/register.html', context)
+	except (EmailExistsException, UsernameExistsException) as e:
+		# TODO: Work on this error handling as well, in template
+		context = {'error': e.args[0]}
+		return render(request, 'main/register.html', context)
+
+
+def IsLogged(request):
+	try:
+		assert request.session['username'] is None
+	except (KeyError, AssertionError):
+		return True
+		# return HttpResponseRedirect(reverse('main:userPage'))
+	return False
 
 
 def EmailExists(email):

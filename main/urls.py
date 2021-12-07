@@ -6,6 +6,7 @@ app_name = 'main'
 urlpatterns = [
     path('userPage/', userPage, name="userPage"),
     path('login/', login, name="login"),
+    path('logout/', logout, name="logout"),
     path('loginSubmit/', loginSubmit, name="loginSubmit"),
     path('register/', register, name="register"),
     path('registerSubmit/', registerSubmit, name="registerSubmit"),

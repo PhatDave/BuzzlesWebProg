@@ -14,7 +14,7 @@
                                 <form action="{% url 'main:loginSubmit' %}" method="POST">
                                     {% csrf_token %}
                                     <div class="form-outline form-white mb-4">
-                                        <input type="email" name="email" id="email" class="form-control form-control-lg" placeholder="Email"/>
+                                        <input type="text" name="email" id="email" class="form-control form-control-lg" placeholder="Email"/>
                                         <label class="form-label" for="email">Email</label>
                                     </div>
                                     <div class="form-outline form-white mb-4">
