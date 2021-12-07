@@ -20,23 +20,6 @@ def index(request):
 	return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers',)))
 
 
-def switchLang(request, lang):
-	request.session['lang'] = lang
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
-
-
-def switchDiff(request, diff):
-	if diff != request.session['diff']:
-		request.session['diff'] = diff
-		request.session['puzzleID'] = -1
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
-
-
-def getNewPuzzle(request):
-	request.session['puzzleID'] = -1
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
-
-
 def GetRequestValue(request, val, default=0):
 	try: return request.GET[val]
 	except KeyError: return default
@@ -75,6 +58,27 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
+
+
+def switchLang(request, lang):
+	request.session['lang'] = lang
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+
+
+def switchDiff(request, diff):
+	if diff != request.session['diff']:
+		request.session['diff'] = diff
+		request.session['puzzleID'] = -1
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+
+
+def getNewPuzzle(request):
+	request.session['puzzleID'] = -1
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+
+
+def submitSolution(request):
+	pass
 
 
 def IsValidGame(puzzleName):

@@ -79,3 +79,7 @@ a.black:active {
 .invalidEntry {
     color: red;
 }
+
+.serverInvalidEntry {
+    color: red;
+}

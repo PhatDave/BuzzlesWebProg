@@ -8,11 +8,14 @@ urlpatterns = [
     path('login/', login, name="login"),
     path('logout/', logout, name="logout"),
     path('loginSubmit/', loginSubmit, name="loginSubmit"),
+
     path('register/', register, name="register"),
     path('registerSubmit/', registerSubmit, name="registerSubmit"),
-    path('switchLang/<str:lang>', switchLang, name="switchLang"),
-    path('switchDiff/<int:diff>', switchDiff, name="switchDiff"),
-    path('getNewPuzzle', getNewPuzzle, name="getNewPuzzle"),
+
+    path('switchLang/<str:lang>/', switchLang, name="switchLang"),
+    path('switchDiff/<int:diff>/', switchDiff, name="switchDiff"),
+    path('getNewPuzzle/', getNewPuzzle, name="getNewPuzzle"),
+    path('submitSolution/', submitSolution, name="submitSolution"),
 
     path('<str:puzzleName>/', gameDispatcher, name="gameDispatcher"),
 ]
