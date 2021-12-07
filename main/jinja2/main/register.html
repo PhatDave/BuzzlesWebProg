@@ -9,8 +9,15 @@
                     <div class="card bg-dark text-white">
                         <div class="card-body p-5 text-center">
                             <div class="mb-md-5 mt-md-4 pb-5">
-                                <h2 class="fw-bold mb-2 text-uppercase">Register</h2>
-{#                                TODO: Maybe do something so the div always takes up the same amount of space, shown or not #}
+                                {% if error %}
+                                    <h2 class="fw-bold mb-2 text-uppercase invalidEntry">{{ error }}</h2>
+                                {% endif %}
+                                {% if error %}
+                                    <h2 class="fw-bold mb-2 text-uppercase loginText d-none">Register</h2>
+                                {% else %}
+                                    <h2 class="fw-bold mb-2 text-uppercase loginText">Register</h2>
+                                {% endif %}
+                                {# TODO: Maybe do something so the div always takes up the same amount of space, shown or not #}
                                 <div class="p-0 invalidEntry d-none" id="emptyFieldError">All fields must be filled</div>
                                 <p class="py-2"></p>
                                 <form id="registerForm" action="{% url 'main:registerSubmit' %}" method="POST">
@@ -49,6 +56,15 @@
 {% endblock %}
 
 {% block scirpt %}
+    const timeout = 4000;
+    const fadeTime = 1000;
+    setTimeout(function() {
+        $(".invalidEntry").fadeOut(fadeTime);
+    }, timeout);
+    setTimeout(function() {
+        $(".loginText").removeClass("d-none");
+    }, timeout + fadeTime);
+
     const usernameField = $("#username");
     const emailField = $("#email");
     const invalidEmailElement = $(".invalidEmail");

@@ -137,7 +137,8 @@ def loginSubmit(request):
 		user = User.objects.get(username=email)
 	finally:
 		if user is None:
-			FailLogin(request)
+			context = {'loginFailed': request.POST['email']}
+			return render(request, 'main/login.html', context)
 
 		m = hashlib.sha3_256()
 		salt = user.passwordSalt
@@ -145,17 +146,12 @@ def loginSubmit(request):
 		m.update(salt.encode('utf-8'))
 		hashedPassword = m.hexdigest()
 		if hashedPassword != user.password:
-			FailLogin(request)
-		# TODO: Deal with this context in html for failed login
-		context = {}
+			context = {'loginFailed': request.POST['email']}
+			return render(request, 'main/login.html', context)
+
 		request.session['username'] = user.username
 		# return render(request, 'main/userPage.html', context)
 		return HttpResponseRedirect(reverse('main:userPage'))
-
-
-def FailLogin(request):
-	context = {'loginFailed': request.POST['email']}
-	return render(request, 'main/login.html', context)
 
 
 def register(request):
@@ -194,7 +190,6 @@ def registerSubmit(request):
 		context = {'error': "Unknown error"}
 		return render(request, 'main/register.html', context)
 	except (EmailExistsException, UsernameExistsException) as e:
-		# TODO: Work on this error handling as well, in template
 		context = {'error': e.args[0]}
 		return render(request, 'main/register.html', context)
 
