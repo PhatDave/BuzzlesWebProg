@@ -26,6 +26,53 @@
     </div>
 {% endblock %}
 {% block JQuery %}
+    const form = $("#gameForm")
+
+    function IsBoardFull() {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                if ($("#cell" + i + j).val() == "") {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    function GetSerializedBoard() {
+        let board = "";
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                board += $("#cell" + i + j).val() + "/"
+            }
+        }
+        return board
+    }
+    function IsBoardSolved() {
+        return solution.join("/") == GetSerializedBoard()
+    }
+
+    form.submit(function() {
+        if (!IsBoardFull()) {
+            {# TODO: Maybe raise board not full error or something to user #}
+            return false
+        }
+
+        if (!IsBoardSolved()) {
+            {# TODO: Report error for invalid board #}
+            return false
+        }
+
+        let timer = $("#gameTimer").text();
+        let puzzleID = $("#puzzleID").text();
+
+        AppendToForm(form, "gameTimer", timer);
+        AppendToForm(form, "puzzleID", puzzleID);
+
+        return true
+        {# TODO: So probably make a new field in user and have it reference another model...? Maybe like a solution or puzzle model #}
+        {# Then maybe... Add table of history to user panel; post timer and puzzleID, insert those into model & history #}
+    })
+
     const task = "{{ taskJ }}".split('/');
     const solution = "{{ solutionJ }}".split('/');
     const boardSize = {{ pSize }};
