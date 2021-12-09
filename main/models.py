@@ -24,9 +24,9 @@ class User(models.Model):
 
 	def __str__(self):
 		return self.username
+
+
 # TODO: Add puzzle history, maybe something like puzzleID, time taken to solve and... Link to replay?
-
-
 class PlayedGame(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	puzzle = models.ForeignKey(SkyscrapersPuzzle, on_delete=models.CASCADE)
@@ -34,4 +34,4 @@ class PlayedGame(models.Model):
 	time = models.CharField(max_length=20)
 
 	def __str__(self):
-		return f'{self.user.username}, {str(self.date)}, {self.puzzle.task}'
+		return f'{self.user.username}, {str(self.time)}, {self.puzzle.task}'

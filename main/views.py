@@ -95,6 +95,7 @@ def submitSolution(request):
 							  time=gameTime,
 							  date=date)
 
+	# TODO: Notify user about success
 	return getNewPuzzle(request)
 
 
