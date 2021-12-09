@@ -5,10 +5,15 @@ from django.contrib import admin
 from django.db.models import Model
 
 # TODO: Maybe add pretty print to each model for admin panel
+
+
 class SkyscrapersPuzzle(models.Model):
 	task = models.CharField(max_length=128, blank=False)
 	solution = models.CharField(max_length=256, blank=False)
 	difficulty = models.IntegerField(blank=False, default=0)
+
+	def __str__(self):
+		return self.task
 
 
 class User(models.Model):
@@ -16,6 +21,9 @@ class User(models.Model):
 	email = models.CharField(max_length=128)
 	password = models.CharField(max_length=256)
 	passwordSalt = models.CharField(max_length=16)
+
+	def __str__(self):
+		return self.username
 # TODO: Add puzzle history, maybe something like puzzleID, time taken to solve and... Link to replay?
 
 
@@ -24,3 +32,6 @@ class PlayedGame(models.Model):
 	puzzle = models.ForeignKey(SkyscrapersPuzzle, on_delete=models.CASCADE)
 	date = models.DateTimeField()
 	time = models.CharField(max_length=20)
+
+	def __str__(self):
+		return f'{self.user.username}, {str(self.date)}, {self.puzzle.task}'

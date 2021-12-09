@@ -59,6 +59,7 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 		request.session['puzzleID'] = puzzle.id
 		context = cb.AddTaskAndSolution(context, puzzle)
 		context['puzzleStart'] = request.session['puzzleStart']
+		context['username'] = request.session['username']
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
@@ -94,8 +95,7 @@ def submitSolution(request):
 							  time=gameTime,
 							  date=date)
 
-	# TODO: Return something
-	pass
+	return getNewPuzzle(request)
 
 
 def IsValidGame(puzzleName):
