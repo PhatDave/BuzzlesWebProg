@@ -23,7 +23,7 @@
 						{# TODO: Display some sort of user account instead of login page #}
                         {# TODO: Add link to name as well #}
 						<a href="{% url 'main:userPage' %}"><i class="fa fa-user text-center p-3"></i></a>
-                        <span>{{ username }}</span>
+                        <span>{{ user.username }}</span>
 						<i class="fa fa-chevron-left p-3" id="hideIcon"></i>
 					</div>
 					<div class="row container-fluid">

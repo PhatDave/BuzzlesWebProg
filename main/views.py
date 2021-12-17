@@ -1,7 +1,5 @@
 import os
 import random
-import hashlib
-import string
 import time
 from datetime import datetime
 
@@ -37,8 +35,8 @@ def GetSessionVal(request, val, default=0):
 # TODO: Leaderboard per puzzle with list of users which completed same puzzle
 
 
+# noinspection PyTypeChecker
 def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
-	# LoadPuzzlesFromFile()
 	GetSessionVal(request, 'puzzleStart', str(time.mktime(datetime.now().timetuple())))
 	if not IsValidGame(puzzleName):
 		return HttpResponseNotFound()
@@ -80,27 +78,28 @@ def switchDiff(request, diff):
 		request.session['diff'] = diff
 		request.session['puzzleID'] = -1
 		request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], ]))
 
 
 def getNewPuzzle(request):
 	request.session['puzzleID'] = -1
 	request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], ]))
 
 
 def submitSolution(request):
-	username = request.session['username']
-	puzzleID = request.GET['puzzleID']
-	gameTime = request.GET['gameTimer']
-	date = datetime.now()
+	if request.user.is_authenticated:
+		username = request.user.username
+		puzzleID = request.GET['puzzleID']
+		gameTime = request.GET['gameTimer']
+		date = datetime.now()
 
-	PlayedGame.objects.create(user=User.objects.get(username=username),
-							  puzzle=SkyscrapersPuzzle.objects.get(id=puzzleID),
-							  time=gameTime,
-							  date=date)
+		PlayedGame.objects.create(user=User.objects.get(username=username),
+								  puzzle=SkyscrapersPuzzle.objects.get(id=puzzleID),
+								  time=gameTime,
+								  date=date)
 
-	# TODO: Notify user about success
+		# TODO: Notify user about success
 	return getNewPuzzle(request)
 
 
@@ -143,7 +142,7 @@ def siteLogin(request):
 	context = {
 		'title': "Login"
 	}
-	return render(request, 'main/login.html', context)
+	return render(request, 'main/authentication/login.html', context)
 
 
 def loginSubmit(request):
@@ -158,7 +157,7 @@ def loginSubmit(request):
 		user = authenticate(username=email, password=password)
 	if user is None:
 		context = {'loginFailed': request.POST['email']}
-		return render(request, 'main/login.html', context)
+		return render(request, 'main/authentication/login.html', context)
 	login(request, user)
 	return HttpResponseRedirect(reverse('main:userPage'))
 
@@ -170,7 +169,7 @@ def register(request):
 	context = {
 		'title': "Register"
 	}
-	return render(request, 'main/register.html', context)
+	return render(request, 'main/authentication/register.html', context)
 
 
 def registerSubmit(request):
@@ -192,19 +191,10 @@ def registerSubmit(request):
 		return HttpResponseRedirect(reverse('main:userPage'))
 	except (KeyError, User.DoesNotExist, AssertionError) as e:
 		context = {'error': "Unknown error"}
-		return render(request, 'main/register.html', context)
+		return render(request, 'main/authentication/register.html', context)
 	except (EmailExistsException, UsernameExistsException) as e:
 		context = {'error': e.args[0]}
-		return render(request, 'main/register.html', context)
-
-
-def IsLogged(request):
-	try:
-		assert request.session['username'] is None
-	except (KeyError, AssertionError):
-		return True
-		# return HttpResponseRedirect(reverse('main:userPage'))
-	return False
+		return render(request, 'main/authentication/register.html', context)
 
 
 def EmailExists(email):
