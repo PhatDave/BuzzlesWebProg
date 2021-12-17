@@ -37,6 +37,7 @@ def GetSessionVal(request, val, default=0):
 
 # noinspection PyTypeChecker
 def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
+	# TODO: Rework this to work like userpage
 	GetSessionVal(request, 'puzzleStart', str(time.mktime(datetime.now().timetuple())))
 	if not IsValidGame(puzzleName):
 		return HttpResponseNotFound()
@@ -90,8 +91,8 @@ def getNewPuzzle(request):
 def submitSolution(request):
 	if request.user.is_authenticated:
 		username = request.user.username
-		puzzleID = request.GET['puzzleID']
-		gameTime = request.GET['gameTimer']
+		puzzleID = request.POST['puzzleID']
+		gameTime = request.POST['gameTimer']
 		date = datetime.now()
 
 		PlayedGame.objects.create(user=User.objects.get(username=username),
@@ -122,10 +123,13 @@ def LoadPuzzlesFromFile():
 			SkyscrapersPuzzle.objects.create(task=tasks[i][:-1], solution=solutions[i][:-1], difficulty=diff)
 
 
-def userPage(request):
-	context = {}
-	if request.user.is_authenticated:
-		return render(request, 'main/userPage.html')
+def userPage(request, username):
+	user = User.objects.filter(username=username).get()
+	if user is not None:
+		context = {
+			'user': user
+		}
+		return render(request, 'main/userPage.html', context=context)
 	else:
 		return HttpResponseRedirect(reverse('main:login'))
 

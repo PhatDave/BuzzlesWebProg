@@ -1,0 +1,24 @@
+.topBar {
+    background-color: black;
+}
+
+.userWelcome {
+    color: white;
+}
+
+.emptySpace {
+    padding: 2vw;
+    /*border: black 1px solid;*/
+}
+
+.fa {
+    font-size: 1.5vw;
+}
+
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 480px) {
+    .fa {
+        font-size: 8vw;
+    }
+}

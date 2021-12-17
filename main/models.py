@@ -16,7 +16,6 @@ class SkyscrapersPuzzle(models.Model):
 	def __str__(self):
 		return self.task
 
-# TODO: Rework how the user is handled in template a bit; instead of passing variables and fields and such trash just pass an object of this model
 # class UserInfo(models.Model):
 # 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 #
@@ -24,7 +23,6 @@ class SkyscrapersPuzzle(models.Model):
 # 		return self.username
 
 
-# TODO: Add puzzle history, maybe something like puzzleID, time taken to solve and... Link to replay?
 class PlayedGame(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	puzzle = models.ForeignKey(SkyscrapersPuzzle, on_delete=models.CASCADE)

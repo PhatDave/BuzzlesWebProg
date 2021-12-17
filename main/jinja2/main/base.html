@@ -21,9 +21,9 @@
 				<div class="sidebar col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
 					<div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
 						{# TODO: Display some sort of user account instead of login page #}
-                        {# TODO: Add link to name as well #}
-						<a href="{% url 'main:userPage' %}"><i class="fa fa-user text-center p-3"></i></a>
-                        <span>{{ user.username }}</span>
+                        <a href="{% url 'main:userPage' user.username %}"><i class="fa fa-user text-center p-3"></i></a>
+                        {# TODO: Long usernames butcher the desing, handle that somehow maybe #}
+                        <span class="username">{{ user.username }}</span>
 						<i class="fa fa-chevron-left p-3" id="hideIcon"></i>
 					</div>
 					<div class="row container-fluid">
@@ -89,7 +89,7 @@
 					<div class="col-12">
 						{% block logo %}
 						{% endblock %}
-                        <form action="{% url 'main:submitSolution' %}" method="GET" id="gameForm">
+                        <form action="{% url 'main:submitSolution' %}" method="POST" id="gameForm">
                             {% csrf_token %}
                             <div class="py-4">
                                 <button class="btn btn-outline-dark rounded-0"><i class="fas fa-search"></i></button>
@@ -105,7 +105,6 @@
                             <div class="row">
                                 <div class="col-lg-3"></div>
                                 <div class="col-lg-6">
-                                    {# TODO: Make the DONE button post form? #}
                                     {% block game %}
                                     {% endblock %}
                                 </div>

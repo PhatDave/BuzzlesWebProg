@@ -83,3 +83,7 @@ a.black:active {
 .serverInvalidEntry {
     color: red;
 }
+
+.username {
+    font-size: 3vh;
+}
