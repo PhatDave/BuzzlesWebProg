@@ -113,7 +113,7 @@
                                     {% endblock %}
                                 </div>
                             </div>
-                            <span>Puzzle ID: <span id="puzzleID">{{ puzzleID }}</span></span>
+                            <span id="puzzleID"><a href="{% url 'main:gameLeaderboard' puzzleID %}">Puzzle ID: {{ puzzleID }}</a></span>
                             <div class="py-4">
                                 <a type="submit"><button class="w-25 btn btn-outline-dark rounded-0">Done</button></a>
                             </div>

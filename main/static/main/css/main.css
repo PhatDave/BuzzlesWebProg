@@ -38,6 +38,22 @@ a:active {
   color: white;
 }
 
+#puzzleID a:link {
+  color: black;
+}
+
+#puzzleID a:visited {
+  color: black;
+}
+
+#puzzleID a:hover {
+  color: black;
+}
+
+#puzzleID a:active {
+  color: black;
+}
+
 .cell {
     height: calc((4vw + 4vh) / 2);
     width: calc((4vw + 4vh) / 2);
