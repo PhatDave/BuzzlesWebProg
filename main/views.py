@@ -37,7 +37,7 @@ def GetSessionVal(request, val, default=0):
 
 # noinspection PyTypeChecker
 def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
-	# TODO: Rework this to work like userpage
+	# TODO: Rework this to work like userpage (like in commit b98629c)
 	GetSessionVal(request, 'puzzleStart', str(time.mktime(datetime.now().timetuple())))
 	if not IsValidGame(puzzleName):
 		return HttpResponseNotFound()
@@ -126,8 +126,11 @@ def LoadPuzzlesFromFile():
 def userPage(request, username):
 	user = User.objects.filter(username=username).get()
 	if user is not None:
+		# This is hardcoded to skyscrapers for now, maybe TODO: rework for all puzzles?
+		games = PlayedGame.objects.filter(user=user).all()
 		context = {
-			'user': user
+			'games': games,
+			'user': user,
 		}
 		return render(request, 'main/userPage.html', context=context)
 	else:
@@ -163,7 +166,7 @@ def loginSubmit(request):
 		context = {'loginFailed': request.POST['email']}
 		return render(request, 'main/authentication/login.html', context)
 	login(request, user)
-	return HttpResponseRedirect(reverse('main:userPage'))
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers', )))
 
 
 def register(request):
@@ -237,3 +240,14 @@ def GetPuzzle(model, id=-1, diff=0):
 		pick = id
 		puzzle = get_object_or_404(model, pk=pick, difficulty=diff)
 		return puzzle
+
+
+def gameLeaderboard(request, puzzleID):
+	puzzle = SkyscrapersPuzzle.objects.filter(id=puzzleID).get()
+	games = PlayedGame.objects.filter(puzzle=puzzle).all()
+	context = {
+		'puzzle': puzzle,
+		'games': games,
+	}
+	# TODO: Complete this
+	return render(request, 'main/gameLeaderboardPage.html', context=context)

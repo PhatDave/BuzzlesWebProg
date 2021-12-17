@@ -5,6 +5,7 @@ from main.views import *
 app_name = 'main'
 urlpatterns = [
     path('userPage/<str:username>/', userPage, name="userPage"),
+    path('gameLeaderboard/<int:puzzleID>', gameLeaderboard, name='gameLeaderboard'),
     path('login/', siteLogin, name="login"),
     path('logout/', siteLogout, name="logout"),
     path('loginSubmit/', loginSubmit, name="loginSubmit"),

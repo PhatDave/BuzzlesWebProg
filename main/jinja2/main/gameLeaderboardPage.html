@@ -21,24 +21,20 @@
                     <a href="{% url 'main:gameDispatcher' 'skyscrapers' %}"><button class="btn btn-outline-light px-4 py-3">Home</button></a>
                 </div>
                 <div class="col-8 d-flex justify-content-center align-items-center text-center userWelcome">
-                    <h2>{{ user.username }}'s profile</h2>
+                    <h2>Puzzle #{{ puzzle.id }} leaderboard</h2>
                 </div>
                 <div class="col-2 d-flex justify-content-end align-items-stretch">
-                    {# TODO: This isn't working for some reason? #}
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'main:logout' %}"><button class="btn btn-outline-light px-4 py-3">Logout</button></a>
-                    {% endif %}
                 </div>
             </div>
             <div class="row emptySpace"></div>
             <div class="row">
-                {# TODO: Table be like... Puzzel (with link to puzzle leaderboard), time, link to puzzle #}
+                {# TODO: Sort by time #}
                 <div class="col-3"></div>
                 <div class="col-6">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th scope="col">PuzzleID</th>
+                                <th scope="col">Player</th>
                                 <th scope="col">Date</th>
                                 <th scope="col">Time</th>
                                 <th scope="col"></th>
@@ -47,11 +43,11 @@
                         <tbody>
                             {% for game in games %}
                             <tr>
-                                <th scope="row"><a href="{% url 'main:gameLeaderboard' game.puzzle.id %}">{{ game.puzzle.id }}</a></th>
+                                <th scope="row"><a href="{% url 'main:userPage' game.user.username %}">{{ game.user.username }}</a></th>
                                 <td>{{ game.date }}</td>
                                 <td>{{ game.time }}</td>
                                 {# TODO: Rework gamedispatcher to allow for this link (link to play specific puzzle) #}
-                                <td><a href="">Play</a></td>
+                                <td>Play</td>
                             </tr>
                             {% endfor %}
                         </tbody>
