@@ -18,7 +18,7 @@
             {# TODO: Make responsive somehow? #}
             <div class="row topBar d-flex">
                 <div class="col-2 d-flex justify-content-start align-items-stretch">
-                    <a href="{% url 'main:gameDispatcher' 'skyscrapers' %}"><button class="btn btn-outline-light px-4 py-3">Home</button></a>
+                    <a href="{% url 'main:gameDispatcher' 'skyscrapers' puzzleID %}"><button class="btn btn-outline-light px-4 py-3">Home</button></a>
                 </div>
                 <div class="col-8 d-flex justify-content-center align-items-center text-center userWelcome">
                     <h2>Puzzle #{{ puzzle.id }} leaderboard</h2>
@@ -46,8 +46,7 @@
                                 <th scope="row"><a href="{% url 'main:userPage' game.user.username %}">{{ game.user.username }}</a></th>
                                 <td>{{ game.date }}</td>
                                 <td>{{ game.time }}</td>
-                                {# TODO: Rework gamedispatcher to allow for this link (link to play specific puzzle) #}
-                                <td>Play</td>
+                                <td><a href="{% url 'main:gameDispatcher' 'skyscrapers' game.puzzle.id %}">Play</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -15,12 +15,6 @@ from main.models import *
 languageIcons = os.listdir('main/static/main/imgs/lang')
 
 
-def index(request):
-	context = {}
-	# return render(request, 'main/index.html', context)
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers',)))
-
-
 def GetRequestValue(request, val, default=0):
 	try: return request.GET[val]
 	except KeyError: return default
@@ -32,15 +26,14 @@ def GetSessionVal(request, val, default=0):
 	finally: return request.session[val]
 
 # TODO: Ensure user does not get the same puzzle twice
-# TODO: Leaderboard per puzzle with list of users which completed same puzzle
 
 
 # noinspection PyTypeChecker
-def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
-	# TODO: Rework this to work like userpage (like in commit b98629c)
+def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', diff=0):
 	GetSessionVal(request, 'puzzleStart', str(time.mktime(datetime.now().timetuple())))
 	if not IsValidGame(puzzleName):
 		return HttpResponseNotFound()
+
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
 	# TODO: What fucking retardation??????????????????????
@@ -49,43 +42,60 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 		request.session['puzzleName'] = puzzleName
 	lang = GetSessionVal(request, 'lang', lang)
 	diff = GetSessionVal(request, 'diff', diff)
-	id = GetSessionVal(request, 'puzzleID', id)
 
-	model = GetModelFromName(puzzleName)
 	try:
 		context = cb.BuildDefault(context)
 		context = cb.Build(puzzleName,
 						   lang=lang,
 						   context=context,
 						   diff=diff)
-		puzzle = GetPuzzle(model, id=id, diff=diff)
+
+		puzzle = GetPuzzle(request, SkyscrapersPuzzle, puzzleID, diff)
+		if request.session['puzzleID'] != puzzle.id:
+			request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
 		request.session['puzzleID'] = puzzle.id
-		context = cb.AddTaskAndSolution(context, puzzle)
+
+		context['puzzle'] = puzzle
 		context['puzzleStart'] = request.session['puzzleStart']
-		username = GetSessionVal(request, 'username', 'None')
-		context['username'] = username
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
 
 
+def GetPuzzle(request, model, id=0, diff=0):
+	if id == 0:
+		return GetNewPuzzle(request)
+	else:
+		puzzle = model.objects.filter(id=id, difficulty=diff).get()
+		return puzzle
+
+
 def switchLang(request, lang):
 	request.session['lang'] = lang
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'],]))
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], request.session['puzzleID'], ]))
 
 
 def switchDiff(request, diff):
 	if diff != request.session['diff']:
 		request.session['diff'] = diff
-		request.session['puzzleID'] = -1
 		request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], ]))
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], 0 ]))
 
 
-def getNewPuzzle(request):
-	request.session['puzzleID'] = -1
+def GetNewPuzzle(request):
+	diff = GetSessionVal(request, 'diff', 0)
+	user = request.user
+	newPuzzle = GetRandomSkyscrapersPuzzle(diff, user)
 	request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], ]))
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], newPuzzle.id, ]))
+
+
+def GetRandomSkyscrapersPuzzle(diff, user):
+	userHistory = list(PlayedGame.objects.filter(user=user).all())
+	puzzles = list(SkyscrapersPuzzle.objects.filter(difficulty=diff).all())
+	filteredPuzzles = list(set(puzzles) - set(userHistory))
+	puzzle = random.choice(filteredPuzzles)
+	return puzzle
 
 
 def submitSolution(request):
@@ -101,7 +111,7 @@ def submitSolution(request):
 								  date=date)
 
 		# TODO: Notify user about success
-	return getNewPuzzle(request)
+	return GetNewPuzzle(request)
 
 
 def IsValidGame(puzzleName):
@@ -131,6 +141,8 @@ def userPage(request, username):
 		context = {
 			'games': games,
 			'user': user,
+			# TODO: Find a better way of doing this maybe?
+			'puzzleID': request.session['puzzleID']
 		}
 		return render(request, 'main/userPage.html', context=context)
 	else:
@@ -144,7 +156,7 @@ def siteLogout(request):
 
 def siteLogin(request):
 	if request.user.is_authenticated:
-		return HttpResponseRedirect(reverse('main:userPage'))
+		return HttpResponseRedirect(reverse('main:userPage', args=(request.user.username, )))
 
 	context = {
 		'title': "Login"
@@ -154,7 +166,7 @@ def siteLogin(request):
 
 def loginSubmit(request):
 	if request.user.is_authenticated:
-		return HttpResponseRedirect(reverse('main:userPage'))
+		return HttpResponseRedirect(reverse('main:userPage', args=(request.user.username, )))
 
 	email = request.POST['email']
 	password = request.POST['password']
@@ -166,12 +178,12 @@ def loginSubmit(request):
 		context = {'loginFailed': request.POST['email']}
 		return render(request, 'main/authentication/login.html', context)
 	login(request, user)
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers', )))
+	return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers', 0, )))
 
 
 def register(request):
 	if request.user.is_authenticated:
-		return HttpResponseRedirect(reverse('main:userPage'))
+		return HttpResponseRedirect(reverse('main:userPage', args=(request.user.username, )))
 
 	context = {
 		'title': "Register"
@@ -181,7 +193,7 @@ def register(request):
 
 def registerSubmit(request):
 	if request.user.is_authenticated:
-		return HttpResponseRedirect(reverse('main:userPage'))
+		return HttpResponseRedirect(reverse('main:userPage', args=(request.user.username, )))
 
 	try:
 		username = request.POST['username']
@@ -195,7 +207,7 @@ def registerSubmit(request):
 								 		username=username,
 								 		password=password)
 		login(request, user)
-		return HttpResponseRedirect(reverse('main:userPage'))
+		return HttpResponseRedirect(reverse('main:userPage', args=(request.user.username, )))
 	except (KeyError, User.DoesNotExist, AssertionError) as e:
 		context = {'error': "Unknown error"}
 		return render(request, 'main/authentication/register.html', context)
@@ -231,23 +243,12 @@ def GetModelFromName(puzzleName):
 	# 	return FutoshikiPuzzle
 
 
-def GetPuzzle(model, id=-1, diff=0):
-	if id == -1:
-		items = list(model.objects.filter(difficulty=diff).all())
-		item = random.choice(items)
-		return item
-	else:
-		pick = id
-		puzzle = get_object_or_404(model, pk=pick, difficulty=diff)
-		return puzzle
-
-
 def gameLeaderboard(request, puzzleID):
 	puzzle = SkyscrapersPuzzle.objects.filter(id=puzzleID).get()
 	games = PlayedGame.objects.filter(puzzle=puzzle).all()
 	context = {
 		'puzzle': puzzle,
 		'games': games,
+		'puzzleID': request.session['puzzleID']
 	}
-	# TODO: Complete this
 	return render(request, 'main/gameLeaderboardPage.html', context=context)

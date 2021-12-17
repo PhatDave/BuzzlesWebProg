@@ -1,6 +1,6 @@
 {% load static %}
 
-
+{# TODO: How does reddit handle upvotes? #}
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
@@ -20,7 +20,6 @@
 			<div class="row">
 				<div class="sidebar col-md-4 col-sm-12 col-lg-2 border border-dark border-1 p-0">
 					<div class="d-flex justify-content-between align-items-center d-block bg-dark text-white">
-						{# TODO: Display some sort of user account instead of login page #}
                         {% if user.is_authenticated %}
                             <a href="{% url 'main:userPage' user.username %}"><i class="fa fa-user text-center p-3"></i></a>
                         {% else %}
@@ -113,7 +112,7 @@
                                     {% endblock %}
                                 </div>
                             </div>
-                            <span id="puzzleID"><a href="{% url 'main:gameLeaderboard' puzzleID %}">Puzzle ID: {{ puzzleID }}</a></span>
+                            <span id="puzzleID"><a href="{% url 'main:gameLeaderboard' puzzle.id %}">Puzzle ID: {{ puzzle.id }}</a></span>
                             <div class="py-4">
                                 <a type="submit"><button class="w-25 btn btn-outline-dark rounded-0">Done</button></a>
                             </div>
@@ -128,7 +127,7 @@
 					</div>
 					<div class="col-12">
 						{% for game in puzzleGameIcons %}
-                            <a href={% url 'main:gameDispatcher' game.lowerName %}>
+                            <a href={% url 'main:gameDispatcher' game.lowerName 0 %}>
                                 <figure class="figure m-2">
                                     {# TODO: at least add logo and a png so it's not a 404 #}
                                     {% with "main/imgs/games/"|add:game.img|add:"" as gameI %}

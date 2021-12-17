@@ -71,8 +71,8 @@
         return true
     })
 
-    const task = "{{ taskJ }}".split('/');
-    const solution = "{{ solutionJ }}".split('/');
+    const task = "{{ puzzle.task }}".split('/');
+    const solution = "{{ puzzle.solution }}".split('/');
     const boardSize = {{ pSize }};
 
     $(".cell").keypress(function(key) {

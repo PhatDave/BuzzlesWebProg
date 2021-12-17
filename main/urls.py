@@ -15,8 +15,11 @@ urlpatterns = [
 
     path('switchLang/<str:lang>/', switchLang, name="switchLang"),
     path('switchDiff/<int:diff>/', switchDiff, name="switchDiff"),
-    path('getNewPuzzle/', getNewPuzzle, name="getNewPuzzle"),
+    path('getNewPuzzle/', GetNewPuzzle, name="getNewPuzzle"),
     path('submitSolution/', submitSolution, name="submitSolution"),
 
+    path('<str:puzzleName>/<int:puzzleID>/', gameDispatcher, name="gameDispatcher"),
+    # TODO: This is fine but when redirecting it does not add the puzzleName or puzzleID to the address, why?
     path('<str:puzzleName>/', gameDispatcher, name="gameDispatcher"),
+    path('', gameDispatcher, name="gameDispatcher"),
 ]

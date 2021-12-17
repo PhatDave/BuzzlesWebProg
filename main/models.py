@@ -5,8 +5,6 @@ from django.db import models
 from django.contrib import admin
 from django.db.models import Model
 
-# TODO: Maybe add pretty print to each model for admin panel
-
 
 class SkyscrapersPuzzle(models.Model):
 	task = models.CharField(max_length=128, blank=False)
@@ -14,7 +12,7 @@ class SkyscrapersPuzzle(models.Model):
 	difficulty = models.IntegerField(blank=False, default=0)
 
 	def __str__(self):
-		return self.task
+		return str(self.id)
 
 # class UserInfo(models.Model):
 # 	user = models.OneToOneField(User, on_delete=models.CASCADE)
