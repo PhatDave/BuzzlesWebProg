@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 # Create your models here.
@@ -15,15 +16,12 @@ class SkyscrapersPuzzle(models.Model):
 	def __str__(self):
 		return self.task
 
-
-class User(models.Model):
-	username = models.CharField(max_length=32)
-	email = models.CharField(max_length=128)
-	password = models.CharField(max_length=256)
-	passwordSalt = models.CharField(max_length=16)
-
-	def __str__(self):
-		return self.username
+# TODO: Rework how the user is handled in template a bit; instead of passing variables and fields and such trash just pass an object of this model
+# class UserInfo(models.Model):
+# 	user = models.OneToOneField(User, on_delete=models.CASCADE)
+#
+# 	def __str__(self):
+# 		return self.username
 
 
 # TODO: Add puzzle history, maybe something like puzzleID, time taken to solve and... Link to replay?

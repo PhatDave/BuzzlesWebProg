@@ -5,6 +5,7 @@ import string
 import time
 from datetime import datetime
 
+from django.contrib.auth import *
 from django.http import HttpResponseNotFound, \
 	HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -31,6 +32,9 @@ def GetSessionVal(request, val, default=0):
 	try: return request.session[val]
 	except KeyError: request.session[val] = default
 	finally: return request.session[val]
+
+# TODO: Ensure user does not get the same puzzle twice
+# TODO: Leaderboard per puzzle with list of users which completed same puzzle
 
 
 def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
@@ -59,7 +63,8 @@ def gameDispatcher(request, puzzleName='skyscrapers', lang='en', diff=0, id=-1):
 		request.session['puzzleID'] = puzzle.id
 		context = cb.AddTaskAndSolution(context, puzzle)
 		context['puzzleStart'] = request.session['puzzleStart']
-		context['username'] = request.session['username']
+		username = GetSessionVal(request, 'username', 'None')
+		context['username'] = username
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
@@ -120,64 +125,46 @@ def LoadPuzzlesFromFile():
 
 def userPage(request):
 	context = {}
-	if GetSessionVal(request, 'username', None) is not None:
+	if request.user.is_authenticated:
 		return render(request, 'main/userPage.html')
 	else:
 		return HttpResponseRedirect(reverse('main:login'))
 
 
-def logout(request):
-	request.session['username'] = None
+def siteLogout(request):
+	logout(request)
 	return HttpResponseRedirect(reverse('main:login'))
 
 
-def login(request):
-	if IsLogged(request):
+def siteLogin(request):
+	if request.user.is_authenticated:
 		return HttpResponseRedirect(reverse('main:userPage'))
 
 	context = {
 		'title': "Login"
 	}
-	if GetSessionVal(request, 'userName', None) is not None:
-		return HttpResponseRedirect(reverse('main:userPage'))
 	return render(request, 'main/login.html', context)
 
 
 def loginSubmit(request):
-	if IsLogged(request):
+	if request.user.is_authenticated:
 		return HttpResponseRedirect(reverse('main:userPage'))
 
 	email = request.POST['email']
 	password = request.POST['password']
-	user = None
-	try:
-		EmailExists(email)
-		UsernameExists(email)
-	except EmailExistsException as e:
-		user = User.objects.get(email=email)
-	except UsernameExistsException as e:
-		user = User.objects.get(username=email)
-	finally:
-		if user is None:
-			context = {'loginFailed': request.POST['email']}
-			return render(request, 'main/login.html', context)
 
-		m = hashlib.sha3_256()
-		salt = user.passwordSalt
-		m.update(password.encode('utf-8'))
-		m.update(salt.encode('utf-8'))
-		hashedPassword = m.hexdigest()
-		if hashedPassword != user.password:
-			context = {'loginFailed': request.POST['email']}
-			return render(request, 'main/login.html', context)
-
-		request.session['username'] = user.username
-		# return render(request, 'main/userPage.html', context)
-		return HttpResponseRedirect(reverse('main:userPage'))
+	user = authenticate(email=email, password=password)
+	if user is None:
+		user = authenticate(username=email, password=password)
+	if user is None:
+		context = {'loginFailed': request.POST['email']}
+		return render(request, 'main/login.html', context)
+	login(request, user)
+	return HttpResponseRedirect(reverse('main:userPage'))
 
 
 def register(request):
-	if IsLogged(request):
+	if request.user.is_authenticated:
 		return HttpResponseRedirect(reverse('main:userPage'))
 
 	context = {
@@ -187,7 +174,7 @@ def register(request):
 
 
 def registerSubmit(request):
-	if IsLogged(request):
+	if request.user.is_authenticated:
 		return HttpResponseRedirect(reverse('main:userPage'))
 
 	try:
@@ -198,15 +185,10 @@ def registerSubmit(request):
 		EmailExists(email)
 		UsernameExists(username)
 
-		m = hashlib.sha3_256()
-		salt = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-		m.update(password.encode('utf-8'))
-		m.update(salt.encode('utf-8'))
-		hashedPassword = m.hexdigest()
-
-		User.objects.create(email=email, password=hashedPassword,
-							username=username, passwordSalt=salt)
-		request.session['username'] = username
+		user = User.objects.create_user(email=email,
+								 		username=username,
+								 		password=password)
+		login(request, user)
 		return HttpResponseRedirect(reverse('main:userPage'))
 	except (KeyError, User.DoesNotExist, AssertionError) as e:
 		context = {'error': "Unknown error"}
@@ -248,6 +230,8 @@ class UsernameExistsException(Exception):
 def GetModelFromName(puzzleName):
 	if puzzleName == 'skyscrapers':
 		return SkyscrapersPuzzle
+	# elif puzzleName == 'futoshiki':
+	# 	return FutoshikiPuzzle
 
 
 def GetPuzzle(model, id=-1, diff=0):
