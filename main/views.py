@@ -25,8 +25,6 @@ def GetSessionVal(request, val, default=0):
 	except KeyError: request.session[val] = default
 	finally: return request.session[val]
 
-# TODO: Ensure user does not get the same puzzle twice
-
 
 # noinspection PyTypeChecker
 def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', diff=0):
@@ -37,6 +35,10 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
 	# TODO: What fucking retardation??????????????????????
+	# TODO: Use return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], request.session['puzzleID'], ]))
+	# TODO: JS Async post req
+	# TODO: https://api.jquery.com/jquery.post/
+	# TODO: https://stackoverflow.com/questions/14642130/how-to-response-ajax-request-in-django/14642191
 	if '.ico' in puzzleName:
 		puzzleName = 'skyscrapers'
 		request.session['puzzleName'] = puzzleName
@@ -50,8 +52,14 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 						   context=context,
 						   diff=diff)
 
+		# TODO: Check if ID is 0 ? Have new puzzle redirect to the correct URL and the dispatcher run again with good ID
+		if puzzleID == 0:
+			if request.session['puzzleID'] is None:
+				return GetNewPuzzle(request)
+			else:
+				return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], request.session['puzzleID'], ]))
 		puzzle = GetPuzzle(request, SkyscrapersPuzzle, puzzleID, diff)
-		if request.session['puzzleID'] != puzzle.id:
+		if GetSessionVal(request, 'puzzleID', puzzle.id) != puzzle.id:
 			request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
 		request.session['puzzleID'] = puzzle.id
 
@@ -63,11 +71,8 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 
 
 def GetPuzzle(request, model, id=0, diff=0):
-	if id == 0:
-		return GetNewPuzzle(request)
-	else:
-		puzzle = model.objects.filter(id=id, difficulty=diff).get()
-		return puzzle
+	puzzle = model.objects.filter(id=id, difficulty=diff).get()
+	return puzzle
 
 
 def switchLang(request, lang):
@@ -87,6 +92,7 @@ def GetNewPuzzle(request):
 	user = request.user
 	newPuzzle = GetRandomSkyscrapersPuzzle(diff, user)
 	request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
+	# return newPuzzle
 	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], newPuzzle.id, ]))
 
 
