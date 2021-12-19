@@ -53,12 +53,12 @@
 
     form.submit(function() {
         if (!IsBoardFull()) {
-            {# TODO: Maybe raise board not full error or something to user #}
+            ShowError("The board contains empty spaces!");
             return false
         }
 
         if (!IsBoardSolved()) {
-            {# TODO: Report error for invalid board #}
+            ShowError("The board contains errors!");
             return false
         }
 
@@ -70,6 +70,16 @@
 
         return true
     })
+
+    let doneButton = $("#doneButton");
+    function ShowError(message) {
+        doneButton.addClass("invalidEntry");
+        doneButton.text(message);
+        setTimeout(function() {
+            doneButton.removeClass("invalidEntry");
+            doneButton.text("Done");
+        }, 5000);
+    }
 
     const task = "{{ puzzle.task }}".split('/');
     const solution = "{{ puzzle.solution }}".split('/');
