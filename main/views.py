@@ -53,10 +53,14 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 
 		# TODO: Check if ID is 0 ? Have new puzzle redirect to the correct URL and the dispatcher run again with good ID
 		if puzzleID == 0:
-			if request.session['puzzleID'] is None:
+			try:
+				request.session['puzzleID']
+				return HttpResponseRedirect(
+					reverse('main:gameDispatcher',
+							args=[request.session['puzzleName'],
+								  request.session['puzzleID'], ]))
+			except KeyError:
 				return GetNewPuzzle(request)
-			else:
-				return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], request.session['puzzleID'], ]))
 		puzzle = GetPuzzle(request, SkyscrapersPuzzle, puzzleID, diff)
 		if GetSessionVal(request, 'puzzleID', puzzle.id) != puzzle.id:
 			request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
@@ -251,6 +255,8 @@ def GetModelFromName(puzzleName):
 def gameLeaderboard(request, puzzleID):
 	puzzle = SkyscrapersPuzzle.objects.filter(id=puzzleID).get()
 	games = PlayedGame.objects.filter(puzzle=puzzle).all()
+	games = list(games)
+	games.sort(key=lambda x: x.GetUnixTime())
 	context = {
 		'puzzle': puzzle,
 		'games': games,

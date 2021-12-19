@@ -1,3 +1,5 @@
+import re
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -29,3 +31,17 @@ class PlayedGame(models.Model):
 
 	def __str__(self):
 		return f'{self.user.username}, {str(self.time)}, {self.puzzle.task}'
+
+	def GetUnixTime(self):
+		time = 0
+		time += self.Find(self.time, r"(\d+)s")
+		time += self.Find(self.time, r"(\d+)m") * 60
+		time += self.Find(self.time, r"(\d+)h") * 60 * 60
+		time += self.Find(self.time, r"(\d+)d") * 60 * 60 * 24
+		return time
+
+	def Find(self, string, regex):
+		try:
+			return int(re.findall(regex, string)[0])
+		except IndexError:
+			return 0
