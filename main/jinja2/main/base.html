@@ -1,6 +1,5 @@
 {% load static %}
 
-{# TODO: How does reddit handle upvotes? #}
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
@@ -95,12 +94,11 @@
                         <form action="{% url 'main:submitSolution' %}" method="POST" id="gameForm">
                             {% csrf_token %}
                             <div class="py-4">
-                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-search"></i></button>
-                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-cog"></i></button>
+{#                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-search"></i></button>#}
+{#                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-cog"></i></button>#}
                                 <span class="px-3" id="gameTimer"></span>
-                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-left"></i></button>
-                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-right"></i></button>
-                                {# TODO: JS the two buttons #}
+{#                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-left"></i></button>#}
+{#                                <button class="btn btn-outline-dark rounded-0"><i class="fas fa-arrow-right"></i></button>#}
                                 {# https://getbootstrap.com/docs/5.0/utilities/display/ #}
                                 <div class="d-none">Zoom bar</div>
                                 <div class="d-none">Settings</div>
@@ -118,10 +116,9 @@
                             </div>
                         </form>
 						<div>
-							{# TODO: Make responsive by splitting buttons into 2 rows on sm #}
-							<button class="btn btn-outline-dark rounded-0">Start Over</button>
-							<button class="btn btn-outline-dark rounded-0">Print</button>
-							<button class="btn btn-outline-dark rounded-0">Share</button>
+                            {# TODO: Make buttons do stuff #}
+							<button id="startOverButton" class="btn btn-outline-dark rounded-0">Start Over</button>
+{#							<button id="shareButton" class="btn btn-outline-dark rounded-0">Share</button>#}
                             <a href="{% url 'main:getNewPuzzle' %}"><button class="btn btn-outline-dark rounded-0">New Puzzle</button></a>
 						</div>
 					</div>
@@ -176,6 +173,10 @@
 			            rulesShown = true;
 			        }
 			    })
+
+                $("#startOverButton").click(function() {
+                    ResetPuzzle();
+                })
 
                 function AppendToForm(form, key, value) {
                     let element = $("<input>");

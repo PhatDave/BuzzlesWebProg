@@ -35,7 +35,6 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
 	# TODO: What fucking retardation??????????????????????
-	# TODO: Use return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], request.session['puzzleID'], ]))
 	# TODO: JS Async post req
 	# TODO: https://api.jquery.com/jquery.post/
 	# TODO: https://stackoverflow.com/questions/14642130/how-to-response-ajax-request-in-django/14642191

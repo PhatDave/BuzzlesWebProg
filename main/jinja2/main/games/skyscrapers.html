@@ -171,6 +171,15 @@
         return board
     }
 
+    function ResetPuzzle() {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                $("#cell" + i + j).val("");
+            }
+        }
+        ValidateBoard();
+    }
+
     function MarkErrorsBySolution(board) {
         for (let i = 0; i < boardSize; i++) {
             for (let j = 0; j < boardSize; j++) {

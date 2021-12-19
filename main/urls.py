@@ -19,7 +19,6 @@ urlpatterns = [
     path('submitSolution/', submitSolution, name="submitSolution"),
 
     path('<str:puzzleName>/<int:puzzleID>/', gameDispatcher, name="gameDispatcher"),
-    # TODO: This is fine but when redirecting it does not add the puzzleName or puzzleID to the address, why?
     path('<str:puzzleName>/', gameDispatcher, name="gameDispatcher"),
     path('', gameDispatcher, name="gameDispatcher"),
 ]
