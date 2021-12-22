@@ -80,6 +80,7 @@ def switchLang(request, lang):
 def switchDiff(request, diff):
 	if diff != request.session['diff']:
 		request.session['diff'] = diff
+		request.session['puzzleID'] = 0
 		request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
 	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], 0 ]))
 

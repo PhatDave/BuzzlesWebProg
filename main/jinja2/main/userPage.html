@@ -45,7 +45,7 @@
                         <tbody>
                             {% for game in games %}
                             <tr>
-                                <th scope="row"><a href="{% url 'main:gameDispatcher' "skyscrapers" 0 %}">{{ game.puzzle.name }}</a></th>
+                                <th scope="row"><a href="{% url 'main:gameDispatcher' "skyscrapers" 0 %}">{{ game.puzzle.name }} ({{ game.puzzle.difficulty }})</a></th>
                                 <td><a href="{% url 'main:gameLeaderboard' game.puzzle.id %}">{{ game.puzzle.id }}</a></td>
                                 <td>{{ game.date }}</td>
                                 <td>{{ game.time }}</td>
