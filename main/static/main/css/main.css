@@ -1,13 +1,5 @@
 .fa {
-    font-size: 1.5vw;
-}
-
-@media only screen
-and (min-device-width : 320px)
-and (max-device-width : 480px) {
-    .fa {
-        font-size: 8vw;
-    }
+    font-size: 1.7em;
 }
 
 .smallerText {
@@ -96,10 +88,14 @@ a.black:active {
     color: red;
 }
 
+.validEntry {
+    color: green;
+}
+
 .serverInvalidEntry {
     color: red;
 }
 
 .username {
-    font-size: 3vh;
+    font-size: 1.7em;
 }

@@ -15,7 +15,6 @@
 	</head>
     <body>
         <div class="col-12">
-            {# TODO: Make responsive somehow? #}
             <div class="row topBar d-flex">
                 <div class="col-2 d-flex justify-content-start align-items-stretch">
                     <a href="{% url 'main:gameDispatcher' 'skyscrapers' puzzleID %}"><button class="btn btn-outline-light px-4 py-3">Home</button></a>
@@ -28,8 +27,8 @@
             </div>
             <div class="row emptySpace"></div>
             <div class="row">
-                <div class="col-3"></div>
-                <div class="col-6">
+                <div class="col-lg-3 col-sm-0"></div>
+                <div class="col-lg-6 col-sm-0">
                     <table class="table">
                         <thead>
                             <tr>
@@ -51,7 +50,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-3"></div>
+                <div class="col-lg-3 col-sm-0"></div>
             </div>
         </div>
         <script>

@@ -5,7 +5,7 @@ from datetime import datetime
 
 from django.contrib.auth import *
 from django.http import HttpResponseNotFound, \
-	HttpResponseRedirect
+	HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
@@ -13,17 +13,6 @@ import main.ContextBuilder as cb
 from main.models import *
 
 languageIcons = os.listdir('main/static/main/imgs/lang')
-
-
-def GetRequestValue(request, val, default=0):
-	try: return request.GET[val]
-	except KeyError: return default
-
-
-def GetSessionVal(request, val, default=0):
-	try: return request.session[val]
-	except KeyError: request.session[val] = default
-	finally: return request.session[val]
 
 
 # noinspection PyTypeChecker
@@ -34,11 +23,10 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
-	# TODO: What fucking retardation??????????????????????
-	# TODO: JS Async post req
-	# TODO: https://api.jquery.com/jquery.post/
-	# TODO: https://stackoverflow.com/questions/14642130/how-to-response-ajax-request-in-django/14642191
+	# https://api.jquery.com/jquery.post/
+	# https://stackoverflow.com/questions/14642130/how-to-response-ajax-request-in-django/14642191
 	if '.ico' in puzzleName:
+		# TODO: What fucking retardation??????????????????????
 		puzzleName = 'skyscrapers'
 		request.session['puzzleName'] = puzzleName
 	lang = GetSessionVal(request, 'lang', lang)
@@ -51,17 +39,16 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 						   context=context,
 						   diff=diff)
 
-		# TODO: Check if ID is 0 ? Have new puzzle redirect to the correct URL and the dispatcher run again with good ID
 		if puzzleID == 0:
 			try:
-				request.session['puzzleID']
+				assert request.session['puzzleID'] != 0
 				return HttpResponseRedirect(
 					reverse('main:gameDispatcher',
 							args=[request.session['puzzleName'],
 								  request.session['puzzleID'], ]))
-			except KeyError:
+			except (KeyError, AssertionError):
 				return GetNewPuzzle(request)
-		puzzle = GetPuzzle(request, SkyscrapersPuzzle, puzzleID, diff)
+		puzzle = GetPuzzle(request, GetModelFromName(puzzleName), puzzleID, diff)
 		if GetSessionVal(request, 'puzzleID', puzzle.id) != puzzle.id:
 			request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
 		request.session['puzzleID'] = puzzle.id
@@ -71,6 +58,12 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
+
+
+def GetSessionVal(request, val, default=0):
+	try: return request.session[val]
+	except KeyError: request.session[val] = default
+	finally: return request.session[val]
 
 
 def GetPuzzle(request, model, id=0, diff=0):
@@ -92,18 +85,26 @@ def switchDiff(request, diff):
 
 def GetNewPuzzle(request):
 	diff = GetSessionVal(request, 'diff', 0)
-	user = request.user
-	newPuzzle = GetRandomSkyscrapersPuzzle(diff, user)
-	request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
-	# return newPuzzle
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], newPuzzle.id, ]))
+	if request.user.is_authenticated:
+		user = request.user
+		newPuzzle = GetRandomSkyscrapersPuzzle(diff, user)
+		request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
+		return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], newPuzzle.id, ]))
+	else:
+		newPuzzle = GetRandomSkyscrapersPuzzle(diff)
+		request.session['puzzleStart'] = str(time.mktime(datetime.now().timetuple()))
+		return HttpResponseRedirect(reverse('main:gameDispatcher', args=[request.session['puzzleName'], newPuzzle.id, ]))
 
 
-def GetRandomSkyscrapersPuzzle(diff, user):
-	userHistory = list(PlayedGame.objects.filter(user=user).all())
-	puzzles = list(SkyscrapersPuzzle.objects.filter(difficulty=diff).all())
-	filteredPuzzles = list(set(puzzles) - set(userHistory))
-	puzzle = random.choice(filteredPuzzles)
+def GetRandomSkyscrapersPuzzle(diff, user=None):
+	if user is not None:
+		userHistory = list(PlayedGame.objects.filter(user=user).all())
+		puzzles = list(SkyscrapersPuzzle.objects.filter(difficulty=diff).all())
+		filteredPuzzles = list(set(puzzles) - set(userHistory))
+		puzzle = random.choice(filteredPuzzles)
+	else:
+		puzzles = list(SkyscrapersPuzzle.objects.filter(difficulty=diff).all())
+		puzzle = random.choice(puzzles)
 	return puzzle
 
 
@@ -119,7 +120,6 @@ def submitSolution(request):
 								  time=gameTime,
 								  date=date)
 
-		# TODO: Notify user about success
 	return GetNewPuzzle(request)
 
 
@@ -128,6 +128,11 @@ def IsValidGame(puzzleName):
 	if model is None:
 		return False
 	return True
+
+
+def GetModelFromName(puzzleName):
+	if puzzleName == 'skyscrapers':
+		return SkyscrapersPuzzle
 
 
 def LoadPuzzlesFromFile():
@@ -145,13 +150,11 @@ def LoadPuzzlesFromFile():
 def userPage(request, username):
 	user = User.objects.filter(username=username).get()
 	if user is not None:
-		# This is hardcoded to skyscrapers for now, maybe TODO: rework for all puzzles?
 		games = PlayedGame.objects.filter(user=user).all()
 		context = {
 			'games': games,
-			'user': user,
-			# TODO: Find a better way of doing this maybe?
-			'puzzleID': request.session['puzzleID']
+			'userPage': user,
+			'puzzleID': GetSessionVal(request, 'puzzleID', 0),
 		}
 		return render(request, 'main/userPage.html', context=context)
 	else:
@@ -243,13 +246,6 @@ class EmailExistsException(Exception):
 class UsernameExistsException(Exception):
 	def __init__(self):
 		super().__init__("Username already exists")
-
-
-def GetModelFromName(puzzleName):
-	if puzzleName == 'skyscrapers':
-		return SkyscrapersPuzzle
-	# elif puzzleName == 'futoshiki':
-	# 	return FutoshikiPuzzle
 
 
 def gameLeaderboard(request, puzzleID):

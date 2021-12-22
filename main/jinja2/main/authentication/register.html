@@ -9,7 +9,6 @@
                     <div class="card bg-dark text-white">
                         <div class="card-body p-5 text-center">
                             <div class="mb-md-5 mt-md-4 pb-5">
-                                {# TODO: Maybe do something so the div always takes up the same amount of space, shown or not #}
                                 {% if error %}
                                     <h2 class="fw-bold mb-2 text-uppercase serverInvalidEntry">{{ error }}</h2>
                                 {% endif %}
@@ -18,8 +17,7 @@
                                 {% else %}
                                     <h2 class="fw-bold mb-2 text-uppercase loginText">Register</h2>
                                 {% endif %}
-                                {# TODO: Maybe do something so the div always takes up the same amount of space, shown or not #}
-                                <div class="p-0 invalidEntry d-none" id="emptyFieldError">All fields must be filled</div>
+                                <div class="p-0 invalidEntry" id="emptyFieldError">All fields must be filled</div>
                                 <p class="py-2"></p>
                                 <form id="registerForm" action="{% url 'main:registerSubmit' %}" method="POST">
                                     {% csrf_token %}
@@ -30,17 +28,17 @@
                                     <div class="form-outline form-white mb-4">
                                         <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Email"/>
                                         <label class="form-label" for="email">Email</label>
-                                        <div class="small d-none invalidEntry p-0 invalidEmail"></div>
+                                        <div class="small invalidEntry p-0 invalidEmail"></div>
                                     </div>
                                     <div class="form-outline form-white mb-4">
                                         <input type="password" id="password1" name="password" class="form-control form-control-lg" placeholder="Password"/>
                                         <label class="form-label" for="password1">Password</label>
-                                        <div class="small d-none invalidEntry p-0 invalidPassword mainPassword"></div>
+                                        <div class="small invalidEntry p-0 invalidPassword mainPassword"></div>
                                     </div>
                                     <div class="form-outline form-white mb-4">
                                         <input type="password" id="password2" class="form-control form-control-lg" placeholder="Password"/>
                                         <label class="form-label" for="password2">Password (Again)</label>
-                                        <div class="small d-none invalidEntry p-0 invalidPassword secondPassword"></div>
+                                        <div class="small invalidEntry p-0 invalidPassword secondPassword"></div>
                                     </div>
                                     <button class="btn btn-outline-light btn-lg px-5" type="submit">Register</button>
                                 </form>
@@ -104,15 +102,6 @@
             }
         }
 
-        DisplayElement(text) {
-            this.invalidFieldElement.removeClass("d-none");
-            this.invalidFieldElement.text(text);
-        }
-        HideElement() {
-            this.invalidFieldElement.addClass("d-none");
-            this.invalidFieldElement.text("");
-        }
-
         ValidateLength(text) {
             if (text.length == 0) {
                 this.HideElement();
@@ -136,6 +125,15 @@
                 this.HideElement();
                 this.NextValidate(text)
             }
+        }
+
+        DisplayElement(text) {
+{#            this.invalidFieldElement.show();#}
+            this.invalidFieldElement.text(text);
+        }
+        HideElement() {
+{#            this.invalidFieldElement.hide();#}
+            this.invalidFieldElement.text("");
         }
     }
 
@@ -314,9 +312,9 @@
         if (username.length > 0 && email.length > 0 && password1.length > 0 && password2.length > 0) {
             return true
         } else {
-            $("#emptyFieldError").removeClass("d-none");
+            $("#emptyFieldError").show();
             setTimeout(function() {
-                $("#emptyFieldError").addClass("d-none");
+                $("#emptyFieldError").hide();
             }, 2000)
             return false
         }

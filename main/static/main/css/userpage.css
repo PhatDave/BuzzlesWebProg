@@ -17,8 +17,11 @@
 
 @media only screen
 and (min-device-width : 320px)
-and (max-device-width : 480px) {
+and (max-device-width : 640px) {
     .fa {
         font-size: 8vw;
+    }
+    h2 {
+        font-size: 0.9em;
     }
 }
