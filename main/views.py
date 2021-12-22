@@ -1,3 +1,4 @@
+import json
 import os
 import random
 import time
@@ -26,7 +27,7 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 	# https://api.jquery.com/jquery.post/
 	# https://stackoverflow.com/questions/14642130/how-to-response-ajax-request-in-django/14642191
 	if '.ico' in puzzleName:
-		# TODO: What fucking retardation??????????????????????
+		# What fucking retardation??????????????????????
 		puzzleName = 'skyscrapers'
 		request.session['puzzleName'] = puzzleName
 	lang = GetSessionVal(request, 'lang', lang)
@@ -111,8 +112,8 @@ def GetRandomSkyscrapersPuzzle(diff, user=None):
 def submitSolution(request):
 	if request.user.is_authenticated:
 		username = request.user.username
-		puzzleID = request.POST['puzzleID']
-		gameTime = request.POST['gameTimer']
+		puzzleID = request.GET['puzzleID']
+		gameTime = request.GET['gameTimer']
 		date = datetime.now()
 
 		PlayedGame.objects.create(user=User.objects.get(username=username),
@@ -120,7 +121,8 @@ def submitSolution(request):
 								  time=gameTime,
 								  date=date)
 
-	return GetNewPuzzle(request)
+	return HttpResponse(json.dumps({"good": True}), content_type="application/json")
+	# return GetNewPuzzle(request)
 
 
 def IsValidGame(puzzleName):
@@ -249,6 +251,7 @@ class UsernameExistsException(Exception):
 
 
 def gameLeaderboard(request, puzzleID):
+	# TODO: Show only best from a user
 	puzzle = SkyscrapersPuzzle.objects.filter(id=puzzleID).get()
 	games = PlayedGame.objects.filter(puzzle=puzzle).all()
 	games = list(games)

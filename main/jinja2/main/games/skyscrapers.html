@@ -68,7 +68,8 @@
         AppendToForm(form, "gameTimer", timer);
         AppendToForm(form, "puzzleID", puzzleID);
 
-        return true
+        SubmitSolution(form);
+        return false;
     })
 
     let doneButton = $("#doneButton");
@@ -222,6 +223,28 @@
                 }
             }
         })
+    }
+
+    function SubmitSolution(form) {
+        if (!puzzleSolved) {
+            $.ajax({
+                url: "/submitSolution/",
+                type: "GET",
+                data: form.serialize(),
+                cache: false,
+                dataType: "json",
+                success: function() {
+                    puzzleSolved = true;
+                    PuzzleSolved();
+                }
+            });
+        }
+    }
+
+    function PuzzleSolved() {
+        doneButton.text("Victory!");
+        doneButton.addClass("victory");
+        $("#gameTimer").addClass("victory");
     }
 {% endblock %}
 
