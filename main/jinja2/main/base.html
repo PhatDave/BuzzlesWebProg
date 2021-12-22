@@ -240,6 +240,31 @@
                     return string
                 }
 
+                let keyHistory = [];
+                function NewKey(key) {
+                    keyHistory.push(key.which)
+                    if (keyHistory.length > 5) {
+                        keyHistory.shift();
+                    }
+                    if (IsSolve(keyHistory)) {
+                        SolveBoard();
+                    }
+                }
+                const solveCheat = [115, 111, 108, 118, 101];
+                function IsSolve(keyHistory) {
+                    let matches = 0;
+                    if (keyHistory.length >= solveCheat.length) {
+                        $.each(keyHistory, function(k, v) {
+                            if (solveCheat[k] != v) {
+                                return false
+                            } else {
+                                matches ++;
+                            }
+                        })
+                    }
+                    return matches == solveCheat.length
+                }
+
 			    {% block JQuery %}
 			    {% endblock %}
 			})

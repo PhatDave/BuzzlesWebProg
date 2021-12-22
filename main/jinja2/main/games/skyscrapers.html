@@ -91,6 +91,7 @@
             $(this).val(key.which - 48);
             $(this).change();
         }
+        NewKey(key);
     })
 
     $(".cell").change(function() {
@@ -245,6 +246,14 @@
         doneButton.text("Victory!");
         doneButton.addClass("victory");
         $("#gameTimer").addClass("victory");
+    }
+
+    function SolveBoard() {
+        for (let i = 0; i < boardSize; i++) {
+            for (let j = 0; j < boardSize; j++) {
+                $("#cell" + i + j).val(solution[j + i * boardSize]);
+            }
+        }
     }
 {% endblock %}
 

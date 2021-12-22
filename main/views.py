@@ -251,14 +251,21 @@ class UsernameExistsException(Exception):
 
 
 def gameLeaderboard(request, puzzleID):
-	# TODO: Show only best from a user
 	puzzle = SkyscrapersPuzzle.objects.filter(id=puzzleID).get()
 	games = PlayedGame.objects.filter(puzzle=puzzle).all()
 	games = list(games)
 	games.sort(key=lambda x: x.GetUnixTime())
+
+	users = []
+	gamesSorted = []
+	for game in games:
+		if game.user not in users:
+			users.append(game.user)
+			gamesSorted.append(game)
+
 	context = {
 		'puzzle': puzzle,
-		'games': games,
+		'games': gamesSorted,
 		'puzzleID': request.session['puzzleID']
 	}
 	return render(request, 'main/gameLeaderboardPage.html', context=context)
