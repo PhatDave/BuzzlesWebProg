@@ -42,6 +42,9 @@
                                     </div>
                                     <button class="btn btn-outline-light btn-lg px-5" type="submit">Register</button>
                                 </form>
+                                <div class="py-2">
+                                    <a href="{% url 'main:gameDispatcher' %}"><button class="btn btn-outline-light btn-lg px-5">Home</button></a>
+                                </div>
                             </div>
                             <div>
                                 <p class="mb-0">Already have an account? <a href="{% url 'main:login' %}" class="text-white-50 fw-bold">Login</a></p>
@@ -55,6 +58,8 @@
 {% endblock %}
 
 {% block scirpt %}
+    $("#emptyFieldError").hide();
+
     const usernameField = $("#username");
     const emailField = $("#email");
     const invalidEmailElement = $(".invalidEmail");
@@ -315,7 +320,7 @@
             $("#emptyFieldError").show();
             setTimeout(function() {
                 $("#emptyFieldError").hide();
-            }, 2000)
+            }, 6000)
             return false
         }
     })

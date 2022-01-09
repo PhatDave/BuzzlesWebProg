@@ -15,19 +15,23 @@ and (max-device-width : 2000px) {
 }
 
 a:link {
-  color: white;
+    color: white;
+    text-decoration: none;
 }
 
 a:visited {
-  color: white;
+    color: white;
+    text-decoration: none;
 }
 
 a:hover {
-  color: white;
+    color: white;
+    text-decoration: none;
 }
 
 a:active {
-  color: white;
+    color: white;
+    text-decoration: none;
 }
 
 #puzzleID a:link {
