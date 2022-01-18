@@ -24,10 +24,7 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 
 	context = {}
 	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
-	# https://api.jquery.com/jquery.post/
-	# https://stackoverflow.com/questions/14642130/how-to-response-ajax-request-in-django/14642191
 	if '.ico' in puzzleName:
-		# What fucking retardation??????????????????????
 		puzzleName = 'skyscrapers'
 		request.session['puzzleName'] = puzzleName
 	lang = GetSessionVal(request, 'lang', lang)
