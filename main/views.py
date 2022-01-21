@@ -153,7 +153,7 @@ def LoadPuzzlesFromFile():
 def userPage(request, username):
 	user = User.objects.filter(username=username).get()
 	if user is not None:
-		games = PlayedGame.objects.filter(user=user).all()
+		games = PlayedGame.objects.filter(user=user).order_by("-date").all()
 		context = {
 			'games': games,
 			'userPage': user,
