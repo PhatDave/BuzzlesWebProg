@@ -18,6 +18,7 @@ urlpatterns = [
     path('getNewPuzzle/', GetNewPuzzle, name="getNewPuzzle"),
     path('submitSolution/', submitSolution, name="submitSolution"),
 
+    path('<str:puzzleName>/<int:puzzleID>/<int:diff>', gameDispatcher, name="gameDispatcher"),
     path('<str:puzzleName>/<int:puzzleID>/', gameDispatcher, name="gameDispatcher"),
     path('<str:puzzleName>/', gameDispatcher, name="gameDispatcher"),
     path('', gameDispatcher, name="gameDispatcher"),

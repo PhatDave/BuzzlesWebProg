@@ -44,7 +44,7 @@
                                 <th scope="row"><a href="{% url 'main:userPage' game.user.username %}">{{ game.user.username }}</a></th>
                                 <td>{{ game.date }}</td>
                                 <td>{{ game.time }}</td>
-                                <td><a href="{% url 'main:gameDispatcher' 'skyscrapers' game.puzzle.id %}">Play</a></td>
+                                <td><a href="{% url 'main:gameDispatcher' 'skyscrapers' game.puzzle.id game.puzzle.difficulty %}">Play</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>

@@ -17,7 +17,7 @@ languageIcons = os.listdir('main/static/main/imgs/lang')
 
 
 # noinspection PyTypeChecker
-def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', diff=0):
+def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, diff=-1, lang='en'):
 	GetSessionVal(request, 'puzzleStart', str(time.mktime(datetime.now().timetuple())))
 	if not IsValidGame(puzzleName):
 		return HttpResponseNotFound()
@@ -28,7 +28,8 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, lang='en', dif
 		puzzleName = 'skyscrapers'
 		request.session['puzzleName'] = puzzleName
 	lang = GetSessionVal(request, 'lang', lang)
-	diff = GetSessionVal(request, 'diff', diff)
+	if diff == -1:
+		diff = GetSessionVal(request, 'diff', 0)
 
 	try:
 		context = cb.BuildDefault(context)
