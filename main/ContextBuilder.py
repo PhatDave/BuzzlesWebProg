@@ -14,6 +14,9 @@ def Build(puzzleName, context, lang='en', diff=0):
 	context = AddPuzzleSize(context, puzzleName, int(diff))
 	return context
 
+def isValidPuzzle(puzzleName):
+	return puzzleName in locals.content.keys()
+
 
 def BuildDefault(context):
 	context = AddPuzzles(context)

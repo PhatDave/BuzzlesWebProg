@@ -64,7 +64,6 @@ class Localization:
 			},
 			'futoshiki': {
 				'en': {
-					'puzzleTitle': 'Futoshiki',
 					'puzzleDesc': 'Futoshiki also known as "More or Less" is a logic puzzle with simple rules and challenging solutions.',
 					'puzzleRules1': 'The rules are simple.\nYou have to fill the grid with numbers so that:',
 					'puzzleRulesTable': [
@@ -76,18 +75,48 @@ class Localization:
 				},
 
 				'extra': {
+					'puzzleTitle': 'Futoshiki',
 					'puzzleName': 'futoshiki',
 					'difficultyTable': [
-						"4x4 Easy",
-						"5x5 Easy",
-						"5x5 Normal",
-						"5x5 Hard",
-						"7x7 Easy",
-						"7x7 Normal",
-						"7x7 Hard",
-						"9x9 Easy",
-						"9x9 Normal",
-						"9x9 Hard",
+						{"id": 0, "text": "4x4 Easy"},
+						{"id": 1, "text": "5x5 Easy"},
+						{"id": 2, "text": "5x5 Normal"},
+						{"id": 3, "text": "5x5 Hard"},
+						{"id": 4, "text": "7x7 Easy"},
+						{"id": 5, "text": "7x7 Normal"},
+						{"id": 6, "text": "7x7 Hard"},
+						{"id": 7, "text": "9x9 Easy"},
+						{"id": 8, "text": "9x9 Normal"},
+						{"id": 9, "text": "9x9 Hard"},
+					],
+				}
+			},
+			'lightup': {
+				'en': {
+					'puzzleDesc': 'Futoshiki also known as "More or Less" is a logic puzzle with simple rules and challenging solutions.',
+					'puzzleRules1': 'The rules are simple.\nYou have to fill the grid with numbers so that:',
+					'puzzleRulesTable': [
+						'The numbers are from 1 to the size of the grid i.e. 1 to 5 for a 5x5 puzzle.',
+						'Each row and column must contain only one instance of each number.',
+						'The numbers should satisfy the comparison signs - less than or greater than.',
+						'For bigger puzzles the letters (A,B,C etc.) follow after the number 9.',
+					],
+				},
+
+				'extra': {
+					'puzzleTitle': 'Lightup',
+					'puzzleName': 'lightup',
+					'difficultyTable': [
+						{"id": 0, "text": "4x4 Easy"},
+						{"id": 1, "text": "5x5 Easy"},
+						{"id": 2, "text": "5x5 Normal"},
+						{"id": 3, "text": "5x5 Hard"},
+						{"id": 4, "text": "7x7 Easy"},
+						{"id": 5, "text": "7x7 Normal"},
+						{"id": 6, "text": "7x7 Hard"},
+						{"id": 7, "text": "9x9 Easy"},
+						{"id": 8, "text": "9x9 Normal"},
+						{"id": 9, "text": "9x9 Hard"},
 					],
 				}
 			}

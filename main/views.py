@@ -19,15 +19,21 @@ languageIcons = os.listdir('main/static/main/imgs/lang')
 # noinspection PyTypeChecker
 def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, diff=-1, lang='en'):
 	GetSessionVal(request, 'puzzleStart', str(time.mktime(datetime.now().timetuple())))
-	if not IsValidGame(puzzleName):
-		return HttpResponseNotFound()
 
 	context = {}
-	puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
+	# puzzleName = GetSessionVal(request, 'puzzleName', puzzleName)
 	if '.ico' in puzzleName:
 		puzzleName = 'skyscrapers'
 		request.session['puzzleName'] = puzzleName
 	lang = GetSessionVal(request, 'lang', lang)
+
+	if isDummyPuzzle(puzzleName):
+		context = buildDummyContext(puzzleName, lang, diff)
+		return render(request, f'main/games/{puzzleName}.html', context)
+	if not IsValidGame(puzzleName):
+		return HttpResponseNotFound()
+	request.session['puzzleName'] = puzzleName
+
 	if diff == -1:
 		diff = GetSessionVal(request, 'diff', 0)
 
@@ -57,6 +63,23 @@ def gameDispatcher(request, puzzleName='skyscrapers', puzzleID=0, diff=-1, lang=
 		return render(request, f'main/games/{puzzleName}.html', context)
 	except KeyError as e:
 		return HttpResponseNotFound()
+
+def buildDummyContext(puzzleName, lang, diff):
+	context = {}
+	context = cb.BuildDefault(context)
+	context = cb.Build(puzzleName,
+					   lang=lang,
+					   context=context,
+					   diff=diff)
+	context['puzzle'] = {
+		'id': 10,
+	}
+	return context
+
+def isDummyPuzzle(puzzleName):
+	if puzzleName == 'skyscrapers':
+		return False
+	return cb.isValidPuzzle(puzzleName)
 
 
 def GetSessionVal(request, val, default=0):
@@ -190,8 +213,9 @@ def loginSubmit(request):
 	if user is None:
 		context = {'loginFailed': request.POST['email']}
 		return render(request, 'main/authentication/login.html', context)
-	login(request, user)
-	return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers', 0, )))
+	else:
+		login(request, user)
+		return HttpResponseRedirect(reverse('main:gameDispatcher', args=('skyscrapers', 0, )))
 
 
 def register(request):
