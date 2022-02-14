@@ -93,13 +93,9 @@ class Localization:
 			},
 			'lightup': {
 				'en': {
-					'puzzleDesc': 'Futoshiki also known as "More or Less" is a logic puzzle with simple rules and challenging solutions.',
-					'puzzleRules1': 'The rules are simple.\nYou have to fill the grid with numbers so that:',
+					'puzzleDesc': '',
+					'puzzleRules1': "The rules are simple.\nLight Up is played on a rectangular grid. The grid has both black cells and white cells in it. The objective is to place light bulbs on the grid so that every white square is lit. A cell is illuminated by a light bulb if they're in the same row or column, and if there are no black cells between them. Also, no light bulb may illuminate another light bulb. Some of the black cells have numbers in them. A number in a black cell indicates how many light bulbs share an edge with that cell. Left click a square to place a light bulb. Right click to mark with X.",
 					'puzzleRulesTable': [
-						'The numbers are from 1 to the size of the grid i.e. 1 to 5 for a 5x5 puzzle.',
-						'Each row and column must contain only one instance of each number.',
-						'The numbers should satisfy the comparison signs - less than or greater than.',
-						'For bigger puzzles the letters (A,B,C etc.) follow after the number 9.',
 					],
 				},
 
@@ -119,5 +115,84 @@ class Localization:
 						{"id": 9, "text": "9x9 Hard"},
 					],
 				}
-			}
+			},
+			'nonograms': {
+				'en': {
+					'puzzleDesc': '',
+					'puzzleRules1': 'You have a grid of squares, which must be either filled in black or marked with X. Beside each row of the grid are listed the lengths of the runs of black squares on that row. Above each column are listed the lengths of the runs of black squares in that column. Your aim is to find all black squares. Left click on a square to make it black. Right click to mark with X. Click and drag to mark more than one square.',
+					'puzzleRulesTable': [
+					],
+				},
+
+				'extra': {
+					'puzzleTitle': 'Nonograms',
+					'puzzleName': 'nonograms',
+					'difficultyTable': [
+						{"id": 0, "text": "4x4 Easy"},
+						{"id": 1, "text": "5x5 Easy"},
+						{"id": 2, "text": "5x5 Normal"},
+						{"id": 3, "text": "5x5 Hard"},
+						{"id": 4, "text": "7x7 Easy"},
+						{"id": 5, "text": "7x7 Normal"},
+						{"id": 6, "text": "7x7 Hard"},
+						{"id": 7, "text": "9x9 Easy"},
+						{"id": 8, "text": "9x9 Normal"},
+						{"id": 9, "text": "9x9 Hard"},
+					],
+				}
+			},
+			'shakashaka': {
+				'en': {
+					'puzzleDesc': 'Shakashaka (Proof of Quilt) is a logic puzzle with simple rules and challenging solutions.',
+					'puzzleRules1': ' Shakashaka is played on a rectangular grid. The grid has both black cells and white cells in it. The objective is to place black triangles in the white cell in such a way so that they form white rectangular (or square) areas. ',
+					'puzzleRulesTable': [
+						'The triangles are right angled and occupy half of the white square divided diagonally.',
+						'You can place triangles only in white cells.',
+						'The numbers in the black cells indicate how many triangles are adjacent, vertically and horizontally.',
+						'The white rectangles can be either straight or rotated at 45°',
+					],
+				},
+
+				'extra': {
+					'puzzleTitle': 'Shakashaka',
+					'puzzleName': 'shakashaka',
+					'difficultyTable': [
+						{"id": 0, "text": "4x4 Easy"},
+						{"id": 1, "text": "5x5 Easy"},
+						{"id": 2, "text": "5x5 Normal"},
+						{"id": 3, "text": "5x5 Hard"},
+						{"id": 4, "text": "7x7 Easy"},
+						{"id": 5, "text": "7x7 Normal"},
+						{"id": 6, "text": "7x7 Hard"},
+						{"id": 7, "text": "9x9 Easy"},
+						{"id": 8, "text": "9x9 Normal"},
+						{"id": 9, "text": "9x9 Hard"},
+					],
+				}
+			},
+			'sudoku': {
+				'en': {
+					'puzzleDesc': '',
+					'puzzleRules1': ' You have to enter a numerical digit from 1 through 9 in each cell of a 9x9 grid made up of 3x3 regions, starting with various digits given in some cells. Each row, column, and region must contain only one instance of each numeral',
+					'puzzleRulesTable': [
+					],
+				},
+
+				'extra': {
+					'puzzleTitle': 'Sudoku',
+					'puzzleName': 'sudoku',
+					'difficultyTable': [
+						{"id": 0, "text": "4x4 Easy"},
+						{"id": 1, "text": "5x5 Easy"},
+						{"id": 2, "text": "5x5 Normal"},
+						{"id": 3, "text": "5x5 Hard"},
+						{"id": 4, "text": "7x7 Easy"},
+						{"id": 5, "text": "7x7 Normal"},
+						{"id": 6, "text": "7x7 Hard"},
+						{"id": 7, "text": "9x9 Easy"},
+						{"id": 8, "text": "9x9 Normal"},
+						{"id": 9, "text": "9x9 Hard"},
+					],
+				}
+			},
 		}
